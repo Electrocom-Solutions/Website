@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import RotatingText from './RotatingText'
+import SectionParticles from './SectionParticles'
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false)
@@ -22,6 +23,7 @@ export default function Hero() {
 
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 overflow-hidden">
+      <SectionParticles particleCount={200} />
       {/* Gradient overlay for better text readability */}
       <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-50/50 dark:to-gray-900/50 z-0"></div>
 
@@ -41,7 +43,7 @@ export default function Hero() {
             <span className="inline-block mx-2">
               <RotatingText
                 texts={rotatingTexts}
-                mainClassName="px-4 sm:px-5 md:px-7 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 dark:from-yellow-400 dark:via-yellow-300 dark:to-yellow-400 text-gray-900 dark:text-gray-900 overflow-hidden py-2 sm:py-2.5 md:py-3 justify-center rounded-xl font-bold shadow-2xl border-2 border-yellow-400/50 dark:border-yellow-300/50 backdrop-blur-sm"
+                mainClassName="px-4 sm:px-5 md:px-7 backdrop-blur-xl bg-white/80 dark:bg-gray-800/80 text-gray-900 dark:text-white overflow-hidden py-2 sm:py-2.5 md:py-3 justify-center rounded-xl font-bold shadow-2xl border-2 border-white/30 dark:border-gray-700/30 backdrop-saturate-150"
                 staggerFrom="last"
                 initial={{ y: "100%", opacity: 0, scale: 0.8 }}
                 animate={{ y: 0, opacity: 1, scale: 1 }}

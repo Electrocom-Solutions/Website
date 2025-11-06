@@ -15,6 +15,7 @@ interface ParticlesProps {
   sizeRandomness?: number
   cameraDistance?: number
   disableRotation?: boolean
+  useWindowEvents?: boolean
   className?: string
 }
 
@@ -100,6 +101,7 @@ const Particles: React.FC<ParticlesProps> = ({
   sizeRandomness = 1,
   cameraDistance = 20,
   disableRotation = false,
+  useWindowEvents = false,
   className
 }) => {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -134,8 +136,19 @@ const Particles: React.FC<ParticlesProps> = ({
       mouseRef.current = { x, y }
     }
 
+    const handleWindowMouseMove = (e: MouseEvent) => {
+      const x = (e.clientX / window.innerWidth) * 2 - 1
+      const y = -((e.clientY / window.innerHeight) * 2 - 1)
+      mouseRef.current = { x, y }
+    }
+
     if (moveParticlesOnHover) {
-      container.addEventListener('mousemove', handleMouseMove)
+      // Use window events for global particles, container events for section particles
+      if (useWindowEvents) {
+        window.addEventListener('mousemove', handleWindowMouseMove, { passive: true })
+      } else {
+        container.addEventListener('mousemove', handleMouseMove, { passive: true })
+      }
     }
 
     const count = particleCount
@@ -215,6 +228,7 @@ const Particles: React.FC<ParticlesProps> = ({
     return () => {
       window.removeEventListener('resize', resize)
       if (moveParticlesOnHover) {
+        window.removeEventListener('mousemove', handleWindowMouseMove)
         container.removeEventListener('mousemove', handleMouseMove)
       }
       cancelAnimationFrame(animationFrameId)
@@ -233,6 +247,7 @@ const Particles: React.FC<ParticlesProps> = ({
     sizeRandomness,
     cameraDistance,
     disableRotation,
+    useWindowEvents,
     particleColors
   ])
 

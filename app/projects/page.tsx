@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import SectionParticles from '@/components/SectionParticles'
 
 export default function ProjectsPage() {
   const [isVisible, setIsVisible] = useState(false)
@@ -64,8 +65,9 @@ export default function ProjectsPage() {
   ]
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
+    <div className="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300 relative overflow-hidden">
+      <SectionParticles particleCount={200} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 relative z-10">
         <div className="text-center mb-16">
           <h1 className="text-5xl font-bold text-gray-900 dark:text-white mb-4">Our Projects</h1>
           <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto mb-4"></div>

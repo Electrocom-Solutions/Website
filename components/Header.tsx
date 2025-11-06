@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import ThemeToggle from './ThemeToggle'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -76,11 +75,9 @@ export default function Header() {
               Contact
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 dark:bg-primary-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <ThemeToggle />
           </nav>
 
           <div className="flex items-center space-x-2 md:hidden">
-            <ThemeToggle />
             <button
               className="p-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
               onClick={() => setIsMenuOpen(!isMenuOpen)}

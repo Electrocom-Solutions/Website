@@ -2,10 +2,8 @@
 
 import { useEffect, useState } from 'react'
 import Particles from './Particles'
-import { useTheme } from '@/contexts/ThemeContext'
 
 export default function GlobalParticles() {
-  const { theme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
@@ -14,22 +12,22 @@ export default function GlobalParticles() {
 
   if (!mounted) return null
 
-  const particleColors = theme === 'dark' 
-    ? ['#ffffff', '#93c5fd', '#60a5fa', '#3b82f6'] 
-    : ['#ffffff', '#e0e7ff', '#c7d2fe', '#a5b4fc']
+  const particleColors = ['#ffffff', '#93c5fd', '#60a5fa', '#3b82f6']
 
   return (
-    <div className="fixed inset-0 w-full h-full -z-10 pointer-events-none">
+    <div className="fixed inset-0 w-full h-full -z-10">
       <Particles
         particleColors={particleColors}
-        particleCount={500}
-        particleSpread={12}
-        speed={0.1}
-        particleBaseSize={70}
+        particleCount={800}
+        particleSpread={15}
+        speed={0.12}
+        particleBaseSize={80}
         moveParticlesOnHover={true}
+        particleHoverFactor={2.5}
         alphaParticles={true}
         disableRotation={false}
-        className="opacity-40 dark:opacity-30"
+        useWindowEvents={true}
+        className="opacity-60"
       />
     </div>
   )
