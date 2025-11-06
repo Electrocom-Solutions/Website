@@ -31,45 +31,65 @@ export default function PastProjects() {
   const projects = [
     {
       name: "Wedesignz",
-      description: "Creative design and branding platform"
+      description: "Creative design and branding platform",
+      category: "Web Application"
     },
     {
       name: "Electrocom ERP",
-      description: "Internal ERP system for managing operations and manpower"
+      description: "Internal ERP system for managing operations and manpower",
+      category: "Enterprise Software"
     },
     {
       name: "Shree Bada Paliwal Samaj Website",
-      description: "Community management portal with event & member modules"
+      description: "Community management portal with event & member modules",
+      category: "Web Application"
     },
     {
       name: "Vimson Derma Website",
-      description: "Professional website for a dermatology clinic"
+      description: "Professional website for a dermatology clinic",
+      category: "Website"
     },
     {
       name: "SolvifyHub",
-      description: "SaaS platform offering technical solutions to small businesses"
+      description: "SaaS platform offering technical solutions to small businesses",
+      category: "SaaS Platform"
     },
     {
       name: "ClickFix",
-      description: "On-demand service management platform"
+      description: "On-demand service management platform",
+      category: "Web Application"
     },
     {
       name: "LearnHill",
-      description: "Online learning and course management system"
+      description: "Online learning and course management system",
+      category: "E-Learning Platform"
     },
     {
       name: "Tile Placement Software",
-      description: "Intelligent bin-packing algorithm for optimizing tile placement on slabs"
+      description: "Intelligent bin-packing algorithm for optimizing tile placement on slabs",
+      category: "Desktop Application"
     },
     {
       name: "Board Result Printing Software",
-      description: "Automated board exam result printing system"
+      description: "Automated board exam result printing system",
+      category: "Desktop Application"
     },
     {
       name: "Madhuchaitanya (API)",
-      description: "API solution for educational institute automation"
+      description: "API solution for educational institute automation",
+      category: "API Development"
     }
   ]
+
+  const categoryColors: { [key: string]: string } = {
+    "Web Application": "from-blue-500 to-cyan-500",
+    "Enterprise Software": "from-purple-500 to-pink-500",
+    "Website": "from-green-500 to-emerald-500",
+    "SaaS Platform": "from-orange-500 to-red-500",
+    "E-Learning Platform": "from-indigo-500 to-blue-500",
+    "Desktop Application": "from-teal-500 to-cyan-500",
+    "API Development": "from-pink-500 to-rose-500"
+  }
 
   return (
     <section 
@@ -87,40 +107,27 @@ export default function PastProjects() {
           </p>
         </div>
 
-        <div className={`hidden md:block overflow-x-auto ${isVisible ? 'animate-fade-in' : ''}`}>
-          <table className="w-full border-collapse backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 shadow-2xl dark:shadow-gray-900/50 rounded-xl overflow-hidden border border-white/20 dark:border-gray-700/30 backdrop-saturate-150">
-            <thead className="bg-primary-600/80 dark:bg-primary-700/80 backdrop-blur-sm text-white">
-              <tr>
-                <th className="px-6 py-4 text-left font-semibold">Project Name</th>
-                <th className="px-6 py-4 text-left font-semibold">Description</th>
-              </tr>
-            </thead>
-            <tbody>
-              {projects.map((project, index) => (
-                <tr 
-                  key={index} 
-                  className={`border-b border-white/10 dark:border-gray-700/30 hover:bg-primary-50/50 dark:hover:bg-gray-700/30 transition-colors duration-300 cursor-pointer ${
-                    index % 2 === 0 ? 'bg-white/30 dark:bg-gray-800/30' : 'bg-white/20 dark:bg-gray-800/20'
-                  }`}
-                >
-                  <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{project.name}</td>
-                  <td className="px-6 py-4 text-gray-700 dark:text-gray-300">{project.description}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        <div className={`md:hidden grid grid-cols-1 gap-6 ${isVisible ? 'animate-fade-in' : ''}`}>
+        <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 ${isVisible ? 'animate-fade-in' : ''}`}>
           {projects.map((project, index) => (
-            <div 
+            <div
               key={index}
-              className="group backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-6 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150 transform hover:-translate-y-1"
+              className="group relative backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-6 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150 transform hover:-translate-y-2 overflow-hidden"
+              style={{ animationDelay: `${index * 0.05}s` }}
             >
-              <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
-                {project.name}
-              </h3>
-              <p className="text-gray-700 dark:text-gray-300">{project.description}</p>
+              <div className={`absolute inset-0 bg-gradient-to-br ${categoryColors[project.category] || 'from-gray-500 to-gray-700'} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+              <div className="relative">
+                <div className="mb-4">
+                  <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full bg-gradient-to-r ${categoryColors[project.category] || 'from-gray-500 to-gray-700'} text-white shadow-lg`}>
+                    {project.category}
+                  </span>
+                </div>
+                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-3 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  {project.name}
+                </h3>
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  {project.description}
+                </p>
+              </div>
             </div>
           ))}
         </div>
