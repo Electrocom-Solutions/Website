@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import SectionParticles from './SectionParticles'
 
 export default function PastProjects() {
   const [isVisible, setIsVisible] = useState(false)
@@ -74,9 +75,10 @@ export default function PastProjects() {
     <section 
       ref={sectionRef}
       id="projects" 
-      className="py-20 bg-white dark:bg-gray-800 transition-colors duration-300"
+      className="py-20 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionParticles particleCount={170} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">🧩 Our Past Projects</h2>
           <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto mb-4"></div>
@@ -86,8 +88,8 @@ export default function PastProjects() {
         </div>
 
         <div className={`hidden md:block overflow-x-auto ${isVisible ? 'animate-fade-in' : ''}`}>
-          <table className="w-full border-collapse bg-white dark:bg-gray-800 shadow-lg dark:shadow-gray-900/50 rounded-lg overflow-hidden">
-            <thead className="bg-primary-600 dark:bg-primary-700 text-white">
+          <table className="w-full border-collapse backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 shadow-2xl dark:shadow-gray-900/50 rounded-xl overflow-hidden border border-white/20 dark:border-gray-700/30 backdrop-saturate-150">
+            <thead className="bg-primary-600/80 dark:bg-primary-700/80 backdrop-blur-sm text-white">
               <tr>
                 <th className="px-6 py-4 text-left font-semibold">Project Name</th>
                 <th className="px-6 py-4 text-left font-semibold">Description</th>
@@ -97,8 +99,8 @@ export default function PastProjects() {
               {projects.map((project, index) => (
                 <tr 
                   key={index} 
-                  className={`border-b border-gray-200 dark:border-gray-700 hover:bg-primary-50 dark:hover:bg-gray-700 transition-colors duration-300 cursor-pointer ${
-                    index % 2 === 0 ? 'bg-white dark:bg-gray-800' : 'bg-gray-50 dark:bg-gray-800/50'
+                  className={`border-b border-white/10 dark:border-gray-700/30 hover:bg-primary-50/50 dark:hover:bg-gray-700/30 transition-colors duration-300 cursor-pointer ${
+                    index % 2 === 0 ? 'bg-white/30 dark:bg-gray-800/30' : 'bg-white/20 dark:bg-gray-800/20'
                   }`}
                 >
                   <td className="px-6 py-4 font-semibold text-gray-900 dark:text-white">{project.name}</td>
@@ -113,7 +115,7 @@ export default function PastProjects() {
           {projects.map((project, index) => (
             <div 
               key={index}
-              className="group bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 p-6 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 border border-gray-100 dark:border-gray-700 transform hover:-translate-y-1"
+              className="group backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-6 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150 transform hover:-translate-y-1"
             >
               <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                 {project.name}

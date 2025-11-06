@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import SectionParticles from './SectionParticles'
 
 export default function AboutUs() {
   const [isVisible, setIsVisible] = useState(false)
@@ -31,16 +32,17 @@ export default function AboutUs() {
     <section 
       ref={sectionRef}
       id="about" 
-      className="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
+      className="py-20 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionParticles particleCount={150} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">About Us</h2>
           <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto"></div>
         </div>
 
         <div className={`grid md:grid-cols-3 gap-12 ${isVisible ? 'animate-fade-in' : ''}`}>
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700">
+          <div className="backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-8 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 transform hover:-translate-y-2 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150">
             <div className="text-4xl mb-4">🏢</div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Who We Are</h3>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed mb-4">
@@ -51,7 +53,7 @@ export default function AboutUs() {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700" style={{ animationDelay: '0.2s' }}>
+          <div className="backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-8 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 transform hover:-translate-y-2 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150" style={{ animationDelay: '0.2s' }}>
             <div className="text-4xl mb-4">👁️</div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Vision</h3>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
@@ -59,7 +61,7 @@ export default function AboutUs() {
             </p>
           </div>
 
-          <div className="bg-white dark:bg-gray-800 p-8 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700" style={{ animationDelay: '0.4s' }}>
+          <div className="backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-8 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 transform hover:-translate-y-2 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150" style={{ animationDelay: '0.4s' }}>
             <div className="text-4xl mb-4">🎯</div>
             <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Mission</h3>
             <p className="text-gray-700 dark:text-gray-300 leading-relaxed">

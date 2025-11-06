@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import SectionParticles from './SectionParticles'
 
 export default function Technologies() {
   const [isVisible, setIsVisible] = useState(false)
@@ -28,29 +29,22 @@ export default function Technologies() {
   }, [])
 
   const frontendBackend = [
-    { name: 'Next.js', icon: '⚡', color: 'from-gray-800 to-gray-900', description: 'React framework for production' },
-    { name: 'React.js', icon: '⚛️', color: 'from-blue-500 to-cyan-500', description: 'JavaScript library for UI' },
-    { name: 'Flask', icon: '🌶️', color: 'from-red-500 to-orange-500', description: 'Lightweight Python web framework' },
-    { name: 'Flutter', icon: '📱', color: 'from-blue-400 to-blue-600', description: 'Cross-platform mobile framework' },
-    { name: 'Django', icon: '🎸', color: 'from-green-600 to-green-800', description: 'High-level Python web framework' },
-    { name: 'Node.js', icon: '🟢', color: 'from-green-500 to-emerald-600', description: 'JavaScript runtime environment' },
-  ]
-
-  const databases = [
-    { name: 'MySQL', icon: '🗄️', color: 'from-blue-600 to-blue-800', description: 'Relational database management' },
-    { name: 'PostgreSQL', icon: '🐘', color: 'from-blue-500 to-indigo-600', description: 'Advanced open-source database' },
-    { name: 'MongoDB', icon: '🍃', color: 'from-green-500 to-green-700', description: 'NoSQL document database' },
-    { name: 'Oracle SQL', icon: '🔷', color: 'from-red-600 to-red-800', description: 'Enterprise database solution' },
-    { name: 'SQLite', icon: '💾', color: 'from-gray-600 to-gray-800', description: 'Lightweight embedded database' },
+    { name: 'Next.js', icon: '⚡', description: 'React framework for production', gradient: 'from-gray-800 to-gray-900' },
+    { name: 'React.js', icon: '⚛️', description: 'JavaScript library for UI', gradient: 'from-blue-500 to-cyan-500' },
+    { name: 'Flask', icon: '🌶️', description: 'Lightweight Python web framework', gradient: 'from-red-500 to-orange-500' },
+    { name: 'Flutter', icon: '📱', description: 'Cross-platform mobile framework', gradient: 'from-blue-400 to-blue-600' },
+    { name: 'Django', icon: '🎸', description: 'High-level Python web framework', gradient: 'from-green-600 to-green-800' },
+    { name: 'Node.js', icon: '🟢', description: 'JavaScript runtime environment', gradient: 'from-green-500 to-emerald-600' },
   ]
 
   return (
     <section 
       ref={sectionRef}
       id="technologies" 
-      className="py-20 bg-white dark:bg-gray-800 transition-colors duration-300"
+      className="py-20 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionParticles particleCount={200} />
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Cutting-Edge Tech Stack</h2>
           <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto mb-4"></div>
@@ -65,10 +59,10 @@ export default function Technologies() {
             {frontendBackend.map((tech, index) => (
               <div
                 key={index}
-                className="group relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 p-6 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 text-center overflow-hidden"
+                className="group relative backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-6 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150 transform hover:-translate-y-2 text-center overflow-hidden"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${tech.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${tech.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative">
                   <div className="text-5xl mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
                     {tech.icon}
@@ -86,13 +80,19 @@ export default function Technologies() {
         <div className={`${isVisible ? 'animate-fade-in' : ''}`} style={{ animationDelay: '0.3s' }}>
           <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Databases</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
-            {databases.map((db, index) => (
+            {[
+              { name: 'MySQL', icon: '🗄️', description: 'Relational database management', gradient: 'from-blue-600 to-blue-800' },
+              { name: 'PostgreSQL', icon: '🐘', description: 'Advanced open-source database', gradient: 'from-blue-500 to-indigo-600' },
+              { name: 'MongoDB', icon: '🍃', description: 'NoSQL document database', gradient: 'from-green-500 to-green-700' },
+              { name: 'Oracle SQL', icon: '🔷', description: 'Enterprise database solution', gradient: 'from-red-600 to-red-800' },
+              { name: 'SQLite', icon: '💾', description: 'Lightweight embedded database', gradient: 'from-gray-600 to-gray-800' },
+            ].map((db, index) => (
               <div
                 key={index}
-                className="group relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 p-6 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 text-center overflow-hidden"
+                className="group relative backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-6 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150 transform hover:-translate-y-2 text-center overflow-hidden"
                 style={{ animationDelay: `${index * 0.1}s` }}
               >
-                <div className={`absolute inset-0 bg-gradient-to-br ${db.color} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
+                <div className={`absolute inset-0 bg-gradient-to-br ${db.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative">
                   <div className="text-5xl mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
                     {db.icon}
@@ -110,4 +110,3 @@ export default function Technologies() {
     </section>
   )
 }
-

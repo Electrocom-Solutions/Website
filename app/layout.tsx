@@ -4,6 +4,7 @@ import './globals.css'
 import { ThemeProvider } from '@/contexts/ThemeContext'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
+import GlobalParticles from '@/components/GlobalParticles'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -21,8 +22,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
+          <GlobalParticles />
           <Header />
-          <main>{children}</main>
+          <main className="relative z-10">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>

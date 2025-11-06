@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import SectionParticles from './SectionParticles'
 
 export default function IndustriesWeServe() {
   const [isVisible, setIsVisible] = useState(false)
@@ -48,9 +49,10 @@ export default function IndustriesWeServe() {
   return (
     <section 
       ref={sectionRef}
-      className="py-20 bg-gray-50 dark:bg-gray-900 transition-colors duration-300"
+      className="py-20 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionParticles particleCount={140} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">🌱 Industries We Serve</h2>
           <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto"></div>
@@ -60,7 +62,7 @@ export default function IndustriesWeServe() {
           {industries.map((industry, index) => (
             <div 
               key={index}
-              className="group relative bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 border border-gray-100 dark:border-gray-700 text-center transform hover:-translate-y-2 overflow-hidden"
+              className="group relative backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-6 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150 text-center transform hover:-translate-y-2 overflow-hidden"
               style={{ animationDelay: `${index * 0.1}s` }}
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${colors[index]} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>

@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import SectionParticles from './SectionParticles'
 
 export default function OurExpertise() {
   const [isVisible, setIsVisible] = useState(false)
@@ -79,9 +80,10 @@ export default function OurExpertise() {
     <section 
       ref={sectionRef}
       id="expertise" 
-      className="py-20 bg-white dark:bg-gray-800 transition-colors duration-300"
+      className="py-20 relative overflow-hidden"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <SectionParticles particleCount={180} />
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
           <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Expertise</h2>
           <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto"></div>
@@ -91,7 +93,7 @@ export default function OurExpertise() {
           {expertise.map((item, index) => (
             <div 
               key={index} 
-              className="group relative bg-gradient-to-br from-gray-50 to-white dark:from-gray-700 dark:to-gray-800 p-8 rounded-lg shadow-md dark:shadow-gray-900/50 hover:shadow-xl dark:hover:shadow-gray-900 transition-all duration-300 border border-gray-100 dark:border-gray-700 transform hover:-translate-y-2 overflow-hidden"
+              className="group relative backdrop-blur-xl bg-white/70 dark:bg-gray-800/70 p-8 rounded-xl shadow-2xl dark:shadow-gray-900/50 hover:shadow-2xl dark:hover:shadow-gray-900 transition-all duration-300 border border-white/20 dark:border-gray-700/30 backdrop-saturate-150 transform hover:-translate-y-2 overflow-hidden"
             >
               <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
               <div className="relative flex items-start space-x-4 mb-4">
@@ -113,7 +115,7 @@ export default function OurExpertise() {
           ))}
         </div>
 
-        <div className={`mt-12 bg-primary-50 dark:bg-primary-900/20 p-8 rounded-lg border border-primary-100 dark:border-primary-800 ${isVisible ? 'animate-scale-in' : ''}`} style={{ animationDelay: '0.4s' }}>
+        <div className={`mt-12 backdrop-blur-xl bg-primary-50/80 dark:bg-primary-900/30 p-8 rounded-xl border border-primary-100/50 dark:border-primary-800/50 backdrop-saturate-150 ${isVisible ? 'animate-scale-in' : ''}`} style={{ animationDelay: '0.4s' }}>
           <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Manpower Examples</h4>
           <div className="grid md:grid-cols-2 gap-6">
             <div>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react'
 import Link from 'next/link'
+import RotatingText from './RotatingText'
 
 export default function Hero() {
   const [mounted, setMounted] = useState(false)
@@ -10,46 +11,77 @@ export default function Hero() {
     setMounted(true)
   }, [])
 
+  const rotatingTexts = [
+    'IT Solutions',
+    'Software Development',
+    'Hardware Maintenance',
+    'Network Infrastructure',
+    'Manpower Supply',
+    'Custom Solutions'
+  ]
+
   return (
-    <section id="home" className="relative bg-gradient-to-br from-primary-600 via-primary-700 to-primary-800 dark:from-primary-900 dark:via-primary-800 dark:to-primary-900 text-white py-20 md:py-32 overflow-hidden">
+    <section id="home" className="relative min-h-screen flex items-center justify-center py-20 md:py-32 overflow-hidden">
+      {/* Gradient overlay for better text readability */}
+      <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-gray-50/50 dark:to-gray-900/50 z-0"></div>
+
       {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-primary-500/20 rounded-full blur-3xl animate-pulse-slow"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-primary-500/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+      <div className="absolute inset-0 overflow-hidden z-0">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-primary-400/10 dark:bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-400/10 dark:bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-400/5 dark:bg-cyan-500/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className={`text-center max-w-4xl mx-auto ${mounted ? 'animate-fade-in' : ''}`}>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight animate-slide-up">
-            Your Trusted Partner for IT, Software & Manpower Solutions.
+      <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className={`text-center max-w-5xl mx-auto ${mounted ? 'animate-fade-in' : ''}`}>
+          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 leading-tight animate-slide-up">
+            <span className="block mb-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-900 dark:from-white dark:via-gray-100 dark:to-white bg-clip-text text-transparent">
+              Your Trusted Partner for
+            </span>
+            <span className="inline-block mx-2">
+              <RotatingText
+                texts={rotatingTexts}
+                mainClassName="px-4 sm:px-5 md:px-7 bg-gradient-to-r from-yellow-300 via-yellow-200 to-yellow-300 dark:from-yellow-400 dark:via-yellow-300 dark:to-yellow-400 text-gray-900 dark:text-gray-900 overflow-hidden py-2 sm:py-2.5 md:py-3 justify-center rounded-xl font-bold shadow-2xl border-2 border-yellow-400/50 dark:border-yellow-300/50 backdrop-blur-sm"
+                staggerFrom="last"
+                initial={{ y: "100%", opacity: 0, scale: 0.8 }}
+                animate={{ y: 0, opacity: 1, scale: 1 }}
+                exit={{ y: "-120%", opacity: 0, scale: 0.8 }}
+                staggerDuration={0.03}
+                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1.5"
+                transition={{ type: "spring", damping: 25, stiffness: 400 }}
+                rotationInterval={2500}
+              />
+            </span>
           </h1>
-          <p className="text-lg md:text-xl text-primary-100 dark:text-primary-200 mb-10 leading-relaxed animate-slide-up" style={{ animationDelay: '0.2s' }}>
+          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-12 leading-relaxed animate-slide-up max-w-3xl mx-auto" style={{ animationDelay: '0.2s' }}>
             From advanced software development and IT networking to manpower supply and hardware maintenance — Electrocom provides complete, reliable, and customized solutions for your organization.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
+          <div className="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up" style={{ animationDelay: '0.4s' }}>
             <Link
               href="#expertise"
-              className="group relative bg-white text-primary-700 dark:bg-gray-100 dark:text-primary-800 px-8 py-4 rounded-lg font-semibold hover:bg-primary-50 dark:hover:bg-white transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1 overflow-hidden"
+              className="group relative backdrop-blur-xl bg-white/90 dark:bg-gray-800/90 text-primary-700 dark:text-primary-400 px-10 py-5 rounded-xl font-semibold hover:bg-white dark:hover:bg-gray-800 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:-translate-y-2 overflow-hidden border-2 border-primary-200/50 dark:border-primary-700/50"
             >
-              <span className="relative z-10">Explore Our Services</span>
+              <span className="relative z-10 text-lg">Explore Our Services</span>
               <div className="absolute inset-0 bg-gradient-to-r from-primary-50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
             </Link>
             <Link
               href="#contact"
-              className="group relative bg-transparent border-2 border-white text-white px-8 py-4 rounded-lg font-semibold hover:bg-white hover:text-primary-700 dark:hover:text-primary-800 transition-all duration-300 backdrop-blur-sm"
+              className="group relative backdrop-blur-xl bg-transparent border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white px-10 py-5 rounded-xl font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-all duration-300 shadow-2xl hover:shadow-3xl transform hover:-translate-y-2"
             >
-              <span className="relative z-10">Get a Quote</span>
-              <div className="absolute inset-0 bg-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+              <span className="relative z-10 text-lg">Get a Quote</span>
             </Link>
           </div>
         </div>
       </div>
 
       {/* Scroll indicator */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce-slow">
-        <svg className="w-6 h-6 text-white/70" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-        </svg>
+      <div className="absolute bottom-12 left-1/2 transform -translate-x-1/2 animate-bounce-slow z-10">
+        <div className="flex flex-col items-center space-y-2">
+          <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">Scroll</span>
+          <svg className="w-6 h-6 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </div>
       </div>
     </section>
   )
