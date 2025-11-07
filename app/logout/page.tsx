@@ -4,18 +4,18 @@ import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import SectionParticles from '@/components/SectionParticles'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function LogoutPage() {
   const router = useRouter()
+  const { logout } = useAuth()
   const [isLoggingOut, setIsLoggingOut] = useState(true)
 
   useEffect(() => {
     // Simulate logout process
     const logoutTimer = setTimeout(() => {
-      // In a real app, you would:
-      // 1. Clear authentication tokens
-      // 2. Clear user session
-      // 3. Call logout API
+      // Clear authentication
+      logout()
       console.log('User logged out')
       
       setIsLoggingOut(false)
@@ -27,7 +27,7 @@ export default function LogoutPage() {
     }, 1000)
 
     return () => clearTimeout(logoutTimer)
-  }, [router])
+  }, [router, logout])
 
   return (
     <div className="min-h-screen flex items-center justify-center py-20 relative overflow-hidden">

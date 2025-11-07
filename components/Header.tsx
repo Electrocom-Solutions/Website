@@ -1,13 +1,53 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import QuoteModal from './QuoteModal'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function Header() {
+  const router = useRouter()
+  const pathname = usePathname()
+  const { isAuthenticated } = useAuth()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const handleNavigation = (href: string) => {
+    if (href.startsWith('#')) {
+      // If we're not on home page, navigate to home with hash
+      if (pathname !== '/') {
+        router.push(`/${href}`)
+        // Wait for navigation, then scroll
+        setTimeout(() => {
+          const element = document.querySelector(href)
+          if (element) {
+            element.scrollIntoView({ behavior: 'smooth' })
+          }
+        }, 300)
+      } else {
+        // If we're on home page, just scroll to section
+        const element = document.querySelector(href)
+        if (element) {
+          element.scrollIntoView({ behavior: 'smooth' })
+        }
+      }
+    } else {
+      // Regular navigation
+      router.push(href)
+    }
+  }
+
+  const handleFreeConsultation = () => {
+    if (!isAuthenticated) {
+      router.push('/login')
+      setIsMenuOpen(false)
+    } else {
+      router.push('/book-consultation')
+      setIsMenuOpen(false)
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -35,34 +75,34 @@ export default function Header() {
           </div>
 
           <nav className="hidden md:flex items-center space-x-8">
-            <Link 
-              href="#home" 
+            <button
+              onClick={() => handleNavigation('/')}
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group"
             >
               Home
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 dark:bg-primary-400 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link 
-              href="#about" 
+            </button>
+            <button
+              onClick={() => handleNavigation('#about')}
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group"
             >
               About
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 dark:bg-primary-400 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link 
-              href="#expertise" 
+            </button>
+            <button
+              onClick={() => handleNavigation('#expertise')}
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group"
             >
               Expertise
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 dark:bg-primary-400 group-hover:w-full transition-all duration-300"></span>
-            </Link>
-            <Link 
-              href="#technologies" 
+            </button>
+            <button
+              onClick={() => handleNavigation('#technologies')}
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group"
             >
               Technologies
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 dark:bg-primary-400 group-hover:w-full transition-all duration-300"></span>
-            </Link>
+            </button>
             <Link 
               href="/projects" 
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group"
@@ -70,19 +110,19 @@ export default function Header() {
               Projects
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 dark:bg-primary-400 group-hover:w-full transition-all duration-300"></span>
             </Link>
-            <Link 
-              href="#contact" 
+            <button
+              onClick={() => handleNavigation('#contact')}
               className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group"
             >
               Contact
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-primary-600 dark:bg-primary-400 group-hover:w-full transition-all duration-300"></span>
-            </Link>
+            </button>
           </nav>
 
           {/* Action Buttons */}
           <div className="hidden lg:flex items-center space-x-4">
             <button
-              onClick={() => setIsModalOpen(true)}
+              onClick={handleFreeConsultation}
               className="px-4 py-2 rounded-xl bg-transparent border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-all duration-300"
             >
               Free Consultation
@@ -118,34 +158,42 @@ export default function Header() {
               <span className="text-xs font-semibold text-yellow-800 dark:text-yellow-300">MSME Certified</span>
             </div>
             <nav className="flex flex-col space-y-4">
-              <Link 
-                href="#home" 
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                onClick={() => {
+                  handleNavigation('/')
+                  setIsMenuOpen(false)
+                }}
+                className="text-left text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
               >
                 Home
-              </Link>
-              <Link 
-                href="#about" 
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button
+                onClick={() => {
+                  handleNavigation('#about')
+                  setIsMenuOpen(false)
+                }}
+                className="text-left text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
               >
                 About
-              </Link>
-              <Link 
-                href="#expertise" 
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button
+                onClick={() => {
+                  handleNavigation('#expertise')
+                  setIsMenuOpen(false)
+                }}
+                className="text-left text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
               >
                 Expertise
-              </Link>
-              <Link 
-                href="#technologies" 
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              </button>
+              <button
+                onClick={() => {
+                  handleNavigation('#technologies')
+                  setIsMenuOpen(false)
+                }}
+                className="text-left text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
               >
                 Technologies
-              </Link>
+              </button>
               <Link 
                 href="/projects" 
                 className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
@@ -153,22 +201,21 @@ export default function Header() {
               >
                 Projects
               </Link>
-              <Link 
-                href="#contact" 
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
-                onClick={() => setIsMenuOpen(false)}
+              <button
+                onClick={() => {
+                  handleNavigation('#contact')
+                  setIsMenuOpen(false)
+                }}
+                className="text-left text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors py-2"
               >
                 Contact
-              </Link>
+              </button>
             </nav>
             
             {/* Mobile Action Buttons */}
             <div className="flex flex-col space-y-3 mt-4">
               <button
-                onClick={() => {
-                  setIsModalOpen(true)
-                  setIsMenuOpen(false)
-                }}
+                onClick={handleFreeConsultation}
                 className="w-full px-4 py-2 rounded-xl bg-transparent border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-all duration-300"
               >
                 Free Consultation

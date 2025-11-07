@@ -4,9 +4,11 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import SectionParticles from '@/components/SectionParticles'
+import { useAuth } from '@/contexts/AuthContext'
 
 export default function LoginPage() {
   const router = useRouter()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
     email: '',
     password: ''
@@ -42,7 +44,10 @@ export default function LoginPage() {
     console.log('Login attempt:', formData)
     
     // In a real app, you would handle authentication here
-    // For now, we'll just redirect to home
+    // For now, we'll set the user as authenticated
+    const userName = formData.email.split('@')[0] || 'User'
+    login(formData.email, userName)
+    
     setIsSubmitting(false)
     router.push('/')
   }

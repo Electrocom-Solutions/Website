@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { ThemeProvider } from '@/contexts/ThemeContext'
+import { AuthProvider } from '@/contexts/AuthContext'
 import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import GlobalParticles from '@/components/GlobalParticles'
@@ -22,10 +23,12 @@ export default function RootLayout({
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={inter.className}>
         <ThemeProvider>
-          <GlobalParticles />
-          <Header />
-          <main className="relative z-10">{children}</main>
-          <Footer />
+          <AuthProvider>
+            <GlobalParticles />
+            <Header />
+            <main className="relative z-10">{children}</main>
+            <Footer />
+          </AuthProvider>
         </ThemeProvider>
       </body>
     </html>
