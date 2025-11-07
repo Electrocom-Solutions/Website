@@ -1,11 +1,177 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 
 interface QuoteModalProps {
   isOpen: boolean
   onClose: () => void
+}
+
+// Custom Dropdown Component
+interface DropdownOption {
+  value: string
+  label: string
+}
+
+interface CustomDropdownProps {
+  id: string
+  name: string
+  value: string
+  options: DropdownOption[]
+  placeholder: string
+  onChange: (value: string) => void
+  required?: boolean
+}
+
+function CustomDropdown({ id, name, value, options, placeholder, onChange, required }: CustomDropdownProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const [highlightedIndex, setHighlightedIndex] = useState(-1)
+  const dropdownRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+  const listRef = useRef<HTMLUListElement>(null)
+  const itemRefs = useRef<(HTMLLIElement | null)[]>([])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+        setHighlightedIndex(-1)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
+  const getSelectedLabel = () => {
+    const selected = options.find(opt => opt.value === value)
+    return selected ? selected.label : ''
+  }
+
+  const handleSelect = (optionValue: string) => {
+    onChange(optionValue)
+    setIsOpen(false)
+    setHighlightedIndex(-1)
+  }
+
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault()
+      if (isOpen && highlightedIndex >= 0) {
+        handleSelect(options[highlightedIndex].value)
+      } else {
+        setIsOpen(!isOpen)
+      }
+    } else if (e.key === 'Escape') {
+      setIsOpen(false)
+      setHighlightedIndex(-1)
+      buttonRef.current?.focus()
+    } else if (e.key === 'ArrowDown') {
+      e.preventDefault()
+      if (!isOpen) {
+        setIsOpen(true)
+      } else {
+        setHighlightedIndex(prev => {
+          const newIndex = prev < options.length - 1 ? prev + 1 : prev
+          setTimeout(() => {
+            itemRefs.current[newIndex]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+          }, 0)
+          return newIndex
+        })
+      }
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault()
+      if (isOpen) {
+        setHighlightedIndex(prev => {
+          const newIndex = prev > 0 ? prev - 1 : -1
+          if (newIndex >= 0) {
+            setTimeout(() => {
+              itemRefs.current[newIndex]?.scrollIntoView({ block: 'nearest', behavior: 'smooth' })
+            }, 0)
+          }
+          return newIndex
+        })
+      }
+    }
+  }
+
+  return (
+    <div className="relative" ref={dropdownRef}>
+      <input type="hidden" name={name} value={value} required={required} />
+      <button
+        type="button"
+        ref={buttonRef}
+        id={id}
+        onClick={() => setIsOpen(!isOpen)}
+        onKeyDown={handleKeyDown}
+        className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none text-left flex items-center justify-between"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
+        aria-required={required}
+      >
+        <span className={value ? '' : 'text-gray-500 dark:text-gray-400'}>
+          {value ? getSelectedLabel() : placeholder}
+        </span>
+        <svg
+          className={`w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-200 ${
+            isOpen ? 'transform rotate-180' : ''
+          }`}
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="absolute z-50 w-full mt-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-2xl max-h-60 overflow-auto">
+          <ul
+            ref={listRef}
+            role="listbox"
+            className="py-2"
+            aria-label={placeholder}
+          >
+            {options.length === 0 ? (
+              <li className="px-4 py-3 text-gray-500 dark:text-gray-400 text-sm">
+                No options available
+              </li>
+            ) : (
+              options.map((option, index) => (
+                <li
+                  key={option.value}
+                  ref={(el) => { itemRefs.current[index] = el }}
+                  role="option"
+                  aria-selected={value === option.value}
+                  onClick={() => handleSelect(option.value)}
+                  onMouseEnter={() => setHighlightedIndex(index)}
+                  className={`px-4 py-3 cursor-pointer transition-colors ${
+                    value === option.value
+                      ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300'
+                      : highlightedIndex === index
+                      ? 'bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-white'
+                      : 'text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700'
+                  }`}
+                >
+                  <div className="flex items-center justify-between">
+                    <span>{option.label}</span>
+                    {value === option.value && (
+                      <svg className="w-5 h-5 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                </li>
+              ))
+            )}
+          </ul>
+        </div>
+      )}
+    </div>
+  )
 }
 
 export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
@@ -58,12 +224,29 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
     onClose()
   }
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData(prev => ({
       ...prev,
       [e.target.name]: e.target.value
     }))
   }
+
+  const handleServiceChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      serviceRequired: value
+    }))
+  }
+
+  const serviceOptions = [
+    { value: 'hardware-maintenance', label: 'Hardware Maintenance' },
+    { value: 'software-solutions', label: 'Software Solutions' },
+    { value: 'network-solutions', label: 'Network Solutions' },
+    { value: 'manpower-supply', label: 'Manpower Supply' },
+    { value: 'custom-development', label: 'Custom Development' },
+    { value: 'consulting', label: 'Consulting' },
+    { value: 'other', label: 'Other' }
+  ]
 
   return (
     <AnimatePresence>
@@ -186,23 +369,15 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                     <label htmlFor="serviceRequired" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">
                       Service Required <span className="text-red-500">*</span>
                     </label>
-                    <select
+                    <CustomDropdown
                       id="serviceRequired"
                       name="serviceRequired"
-                      required
                       value={formData.serviceRequired}
-                      onChange={handleChange}
-                      className="w-full px-4 py-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 text-gray-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none"
-                    >
-                      <option value="">Select a service</option>
-                      <option value="hardware-maintenance">Hardware Maintenance</option>
-                      <option value="software-solutions">Software Solutions</option>
-                      <option value="network-solutions">Network Solutions</option>
-                      <option value="manpower-supply">Manpower Supply</option>
-                      <option value="custom-development">Custom Development</option>
-                      <option value="consulting">Consulting</option>
-                      <option value="other">Other</option>
-                    </select>
+                      options={serviceOptions}
+                      placeholder="Select a service"
+                      onChange={handleServiceChange}
+                      required
+                    />
                   </div>
 
                   {/* Project Description */}
