@@ -15,12 +15,10 @@ export default function Hero() {
   }, [])
 
   const rotatingTexts = [
-    'IT Solutions',
-    'Software Development',
+    'Software Solutions',
     'Hardware Maintenance',
-    'Network Infrastructure',
-    'Manpower Supply',
-    'Custom Solutions'
+    'Network Solutions',
+    'Manpower Supply'
   ]
 
   return (
