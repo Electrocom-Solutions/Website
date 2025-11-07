@@ -447,6 +447,39 @@ function makeVertexArray(
   return va;
 }
 
+function makeVertexArrayWithBuffers(
+  gl: WebGL2RenderingContext,
+  bufLocNumElmPairs: Array<[WebGLBuffer, number, number]>,
+  indices?: Uint16Array,
+  onIndexBufferCreated?: (buffer: WebGLBuffer) => void
+): WebGLVertexArrayObject | null {
+  const va = gl.createVertexArray();
+  if (!va) return null;
+
+  gl.bindVertexArray(va);
+
+  for (const [buffer, loc, numElem] of bufLocNumElmPairs) {
+    if (loc === -1) continue;
+    gl.bindBuffer(gl.ARRAY_BUFFER, buffer);
+    gl.enableVertexAttribArray(loc);
+    gl.vertexAttribPointer(loc, numElem, gl.FLOAT, false, 0, 0);
+  }
+
+  if (indices) {
+    const indexBuffer = gl.createBuffer();
+    if (indexBuffer) {
+      gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, indexBuffer);
+      gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, indices, gl.STATIC_DRAW);
+      if (onIndexBufferCreated) {
+        onIndexBufferCreated(indexBuffer);
+      }
+    }
+  }
+
+  gl.bindVertexArray(null);
+  return va;
+}
+
 function resizeCanvasToDisplaySize(canvas: HTMLCanvasElement): boolean {
   const dpr = Math.min(2, window.devicePixelRatio || 1);
   const displayWidth = Math.round(canvas.clientWidth * dpr);
@@ -678,6 +711,8 @@ class InfiniteGridMenu {
     normals: Float32Array;
     uvs: Float32Array;
   };
+  private vertexBuffers: WebGLBuffer[] = [];
+  private indexBuffer: WebGLBuffer | null = null;
   private icoGeo!: IcosahedronGeometry;
   private discGeo!: DiscGeometry;
   private worldMatrix = mat4.create();
@@ -717,6 +752,12 @@ class InfiniteGridMenu {
   private _deltaTime = 0;
   private _deltaFrames = 0;
   private _frames = 0;
+  private _animationFrameId: number | null = null;
+  private _isDisposed = false;
+
+  public get isDisposed(): boolean {
+    return this._isDisposed;
+  }
 
   private movementActive = false;
 
@@ -752,8 +793,15 @@ class InfiniteGridMenu {
   }
 
   public resize(): void {
+    if (this._isDisposed || !this.gl) return;
+    
+    // Check if context is lost
+    if (this.gl.isContextLost()) {
+      this._isDisposed = true;
+      return;
+    }
+    
     const needsResize = resizeCanvasToDisplaySize(this.canvas);
-    if (!this.gl) return;
     if (needsResize) {
       this.gl.viewport(0, 0, this.gl.drawingBufferWidth, this.gl.drawingBufferHeight);
     }
@@ -761,26 +809,128 @@ class InfiniteGridMenu {
   }
 
   public run(time = 0): void {
+    if (this._isDisposed) return;
+    
+    // Check if canvas is still connected to DOM
+    if (!this.canvas.isConnected) {
+      this._isDisposed = true;
+      return;
+    }
+    
+    // Check if WebGL context is lost
+    if (this.gl && this.gl.isContextLost()) {
+      this._isDisposed = true;
+      return;
+    }
+
     this._deltaTime = Math.min(32, time - this._time);
     this._time = time;
     this._deltaFrames = this._deltaTime / this.TARGET_FRAME_DURATION;
     this._frames += this._deltaFrames;
 
-    this.animate(this._deltaTime);
-    this.render();
+    try {
+      this.animate(this._deltaTime);
+      this.render();
+    } catch (error) {
+      console.error('Error during animation/render:', error);
+      this._isDisposed = true;
+      return;
+    }
 
-    requestAnimationFrame(t => this.run(t));
+    if (!this._isDisposed) {
+      this._animationFrameId = requestAnimationFrame(t => this.run(t));
+    }
   }
 
   private init(onInit?: InitCallback): void {
-    const gl = this.canvas.getContext('webgl2', {
-      antialias: true,
-      alpha: false
-    });
-    if (!gl) {
-      throw new Error('No WebGL 2 context!');
+    // Dispose any existing resources first (but don't reset _isDisposed flag yet)
+    if (this.gl && !this.gl.isContextLost()) {
+      try {
+        // Only dispose if we have a valid context
+        this._isDisposed = true;
+        if (this._animationFrameId !== null) {
+          cancelAnimationFrame(this._animationFrameId);
+          this._animationFrameId = null;
+        }
+        // Clean up resources without setting gl to null yet
+        if (this.discProgram) {
+          this.gl.deleteProgram(this.discProgram);
+          this.discProgram = null;
+        }
+        if (this.discVAO) {
+          this.gl.deleteVertexArray(this.discVAO);
+          this.discVAO = null;
+        }
+        if (this.tex) {
+          this.gl.deleteTexture(this.tex);
+          this.tex = null;
+        }
+        this.vertexBuffers.forEach(buffer => {
+          if (buffer && this.gl) {
+            this.gl.deleteBuffer(buffer);
+          }
+        });
+        this.vertexBuffers = [];
+        if (this.indexBuffer && this.gl) {
+          this.gl.deleteBuffer(this.indexBuffer);
+          this.indexBuffer = null;
+        }
+        if (this.discInstances?.buffer && this.gl) {
+          this.gl.deleteBuffer(this.discInstances.buffer);
+          this.discInstances.buffer = null;
+        }
+      } catch (error) {
+        console.error('Error during cleanup before reinit:', error);
+      }
     }
+
+    // Try to get WebGL context - if context was lost, getContext might return null
+    let gl = this.canvas.getContext('webgl2', {
+      antialias: true,
+      alpha: false,
+      preserveDrawingBuffer: false,
+      powerPreference: 'high-performance'
+    }) as WebGL2RenderingContext | null;
+    
+    // If context is null or lost, try to get a fresh context
+    if (!gl || (gl && gl.isContextLost())) {
+      // Force recreation by trying to get context again after a brief moment
+      // In practice, the context should be available or we should wait for restoration
+      gl = this.canvas.getContext('webgl2', {
+        antialias: true,
+        alpha: false,
+        preserveDrawingBuffer: false,
+        powerPreference: 'high-performance',
+        failIfMajorPerformanceCaveat: false
+      }) as WebGL2RenderingContext | null;
+    }
+    
+    if (!gl) {
+      throw new Error('No WebGL 2 context available!');
+    }
+    
+    if (gl.isContextLost()) {
+      throw new Error('WebGL context is lost and cannot be used');
+    }
+    
     this.gl = gl;
+    this._isDisposed = false;
+
+    // Add context loss event listener
+    this.canvas.addEventListener('webglcontextlost', (e) => {
+      e.preventDefault();
+      this._isDisposed = true;
+      if (this._animationFrameId !== null) {
+        cancelAnimationFrame(this._animationFrameId);
+        this._animationFrameId = null;
+      }
+    });
+
+    this.canvas.addEventListener('webglcontextrestored', () => {
+      // Context restored - would need to reinitialize
+      // For now, we'll just mark as needing reinit
+      this._isDisposed = true;
+    });
 
     vec2.set(this.viewportSize, this.canvas.clientWidth, this.canvas.clientHeight);
     vec2.clone(this.drawBufferSize);
@@ -815,13 +965,22 @@ class InfiniteGridMenu {
 
     this.discGeo = new DiscGeometry(56, 1);
     this.discBuffers = this.discGeo.data;
-    this.discVAO = makeVertexArray(
+    
+    // Create and track buffers
+    const vertexBuffer = makeBuffer(gl, this.discBuffers.vertices, gl.STATIC_DRAW);
+    const uvBuffer = makeBuffer(gl, this.discBuffers.uvs, gl.STATIC_DRAW);
+    this.vertexBuffers = [vertexBuffer, uvBuffer];
+    
+    this.discVAO = makeVertexArrayWithBuffers(
       gl,
       [
-        [makeBuffer(gl, this.discBuffers.vertices, gl.STATIC_DRAW), this.discLocations.aModelPosition, 3],
-        [makeBuffer(gl, this.discBuffers.uvs, gl.STATIC_DRAW), this.discLocations.aModelUvs, 2]
+        [vertexBuffer, this.discLocations.aModelPosition, 3],
+        [uvBuffer, this.discLocations.aModelUvs, 2]
       ],
-      this.discBuffers.indices
+      this.discBuffers.indices,
+      (indexBuf) => {
+        this.indexBuffer = indexBuf;
+      }
     );
 
     this.icoGeo = new IcosahedronGeometry();
@@ -913,7 +1072,14 @@ class InfiniteGridMenu {
   }
 
   private animate(deltaTime: number): void {
-    if (!this.gl) return;
+    if (!this.gl || this._isDisposed) return;
+    
+    // Check if context is lost
+    if (this.gl.isContextLost()) {
+      this._isDisposed = true;
+      return;
+    }
+    
     this.control.update(deltaTime, this.TARGET_FRAME_DURATION);
 
     const positions = this.instancePositions.map(p => vec3.transformQuat(vec3.create(), p, this.control.orientation));
@@ -942,6 +1108,13 @@ class InfiniteGridMenu {
 
   private render(): void {
     if (!this.gl || !this.discProgram) return;
+    
+    // Check if context is lost
+    if (this.gl.isContextLost()) {
+      this._isDisposed = true;
+      return;
+    }
+    
     const gl = this.gl;
 
     gl.useProgram(this.discProgram);
@@ -1063,6 +1236,64 @@ class InfiniteGridMenu {
     const nearestVertexPos = this.instancePositions[index];
     return vec3.transformQuat(vec3.create(), nearestVertexPos, this.control.orientation);
   }
+
+  public dispose(): void {
+    this._isDisposed = true;
+
+    // Cancel animation frame
+    if (this._animationFrameId !== null) {
+      cancelAnimationFrame(this._animationFrameId);
+      this._animationFrameId = null;
+    }
+
+    if (!this.gl) return;
+
+    try {
+      // Clean up WebGL resources in proper order
+      // 1. Delete program first
+      if (this.discProgram) {
+        this.gl.deleteProgram(this.discProgram);
+        this.discProgram = null;
+      }
+
+      // 2. Delete VAO (this unbinds buffers but doesn't delete them)
+      if (this.discVAO) {
+        this.gl.deleteVertexArray(this.discVAO);
+        this.discVAO = null;
+      }
+
+      // 3. Delete buffers
+      this.vertexBuffers.forEach(buffer => {
+        if (buffer) {
+          this.gl!.deleteBuffer(buffer);
+        }
+      });
+      this.vertexBuffers = [];
+
+      if (this.indexBuffer) {
+        this.gl.deleteBuffer(this.indexBuffer);
+        this.indexBuffer = null;
+      }
+
+      if (this.discInstances?.buffer) {
+        this.gl.deleteBuffer(this.discInstances.buffer);
+        this.discInstances.buffer = null;
+      }
+
+      // 4. Delete texture
+      if (this.tex) {
+        this.gl.deleteTexture(this.tex);
+        this.tex = null;
+      }
+
+      // Clear the WebGL context reference
+      this.gl = null;
+    } catch (error) {
+      console.error('Error during WebGL cleanup:', error);
+      // Even if cleanup fails, mark as disposed
+      this.gl = null;
+    }
+  }
 }
 
 const defaultItems: MenuItem[] = [
@@ -1087,33 +1318,56 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
   useEffect(() => {
     const canvas = canvasRef.current;
     let sketch: InfiniteGridMenu | null = null;
+    let isMounted = true;
 
     const handleActiveItem = (index: number) => {
-      if (!items.length) return;
+      if (!items.length || !isMounted) return;
       const itemIndex = index % items.length;
       setActiveItem(items[itemIndex]);
     };
 
-    if (canvas) {
+    const handleMovementChange = (moving: boolean) => {
+      if (!isMounted) return;
+      setIsMoving(moving);
+    };
+
+    if (canvas && canvas.isConnected) {
       try {
         // Check if WebGL2 is supported
-        const gl = canvas.getContext('webgl2');
+        const gl = canvas.getContext('webgl2', { 
+          failIfMajorPerformanceCaveat: false 
+        });
         if (!gl) {
           throw new Error('WebGL 2 is not supported in this browser');
         }
 
-        sketch = new InfiniteGridMenu(canvas, items.length ? items : defaultItems, handleActiveItem, setIsMoving, sk =>
-          sk.run()
+        // Check if context is already lost
+        if (gl.isContextLost()) {
+          throw new Error('WebGL context is lost');
+        }
+
+        sketch = new InfiniteGridMenu(
+          canvas, 
+          items.length ? items : defaultItems, 
+          handleActiveItem, 
+          handleMovementChange, 
+          (sk) => {
+            if (isMounted && !sk.isDisposed && canvas.isConnected) {
+              sk.run();
+            }
+          }
         );
         setError(null);
       } catch (err) {
         console.error('Failed to initialize InfiniteMenu:', err);
-        setError(err instanceof Error ? err.message : 'Failed to initialize 3D menu');
+        if (isMounted) {
+          setError(err instanceof Error ? err.message : 'Failed to initialize 3D menu');
+        }
       }
     }
 
     const handleResize = () => {
-      if (sketch) {
+      if (sketch && isMounted) {
         try {
           sketch.resize();
         } catch (err) {
@@ -1126,7 +1380,18 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
     handleResize();
 
     return () => {
+      isMounted = false;
       window.removeEventListener('resize', handleResize);
+      
+      // Properly dispose of WebGL resources
+      if (sketch) {
+        try {
+          sketch.dispose();
+        } catch (err) {
+          console.error('Error during cleanup:', err);
+        }
+        sketch = null;
+      }
     };
   }, [items]);
 
