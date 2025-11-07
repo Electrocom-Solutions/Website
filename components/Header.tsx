@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useRouter, usePathname } from 'next/navigation'
 import Link from 'next/link'
 import QuoteModal from './QuoteModal'
@@ -14,6 +14,7 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
+  const servicesTimeoutRef = useRef<NodeJS.Timeout | null>(null)
 
   const handleNavigation = (href: string) => {
     if (href.startsWith('#')) {
@@ -87,11 +88,21 @@ export default function Header() {
             {/* Services Dropdown */}
             <div 
               className="relative"
-              onMouseEnter={() => setIsServicesOpen(true)}
-              onMouseLeave={() => setIsServicesOpen(false)}
+              onMouseEnter={() => {
+                if (servicesTimeoutRef.current) {
+                  clearTimeout(servicesTimeoutRef.current)
+                  servicesTimeoutRef.current = null
+                }
+                setIsServicesOpen(true)
+              }}
+              onMouseLeave={() => {
+                servicesTimeoutRef.current = setTimeout(() => {
+                  setIsServicesOpen(false)
+                }, 150)
+              }}
             >
               <button
-                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group flex items-center gap-1"
+                className="text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-all duration-300 relative group flex items-center gap-1 py-2"
               >
                 Services
                 <svg 
@@ -106,31 +117,41 @@ export default function Header() {
               </button>
               
               {isServicesOpen && (
-                <div className="absolute top-full left-0 mt-2 w-56 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-2xl z-50 py-2">
-                  <Link
-                    href="/services/software-solutions"
-                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    Software Solutions
-                  </Link>
-                  <Link
-                    href="/services/hardware-maintenance"
-                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    Hardware Maintenance
-                  </Link>
-                  <Link
-                    href="/services/network-solutions"
-                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    Network Solutions
-                  </Link>
-                  <Link
-                    href="/services/manpower-supply"
-                    className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    Manpower Supply
-                  </Link>
+                <div 
+                  className="absolute top-full left-0 pt-1 w-56 z-50"
+                  onMouseEnter={() => {
+                    if (servicesTimeoutRef.current) {
+                      clearTimeout(servicesTimeoutRef.current)
+                      servicesTimeoutRef.current = null
+                    }
+                  }}
+                >
+                  <div className="rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 shadow-2xl py-2">
+                    <Link
+                      href="/services/software-solutions"
+                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      Software Solutions
+                    </Link>
+                    <Link
+                      href="/services/hardware-maintenance"
+                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      Hardware Maintenance
+                    </Link>
+                    <Link
+                      href="/services/network-solutions"
+                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      Network Solutions
+                    </Link>
+                    <Link
+                      href="/services/manpower-supply"
+                      className="block px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-primary-50 dark:hover:bg-primary-900/20 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                    >
+                      Manpower Supply
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>

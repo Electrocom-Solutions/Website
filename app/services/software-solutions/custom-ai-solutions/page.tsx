@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import SectionParticles from '@/components/SectionParticles'
 
-export default function UIUXDesignPage() {
+export default function CustomAISolutionsPage() {
   return (
     <div className="min-h-screen">
       <SectionParticles particleCount={200} />
@@ -15,12 +15,12 @@ export default function UIUXDesignPage() {
         </div>
 
         <div className="relative z-10 max-w-4xl mx-auto text-center">
-          <div className="text-6xl mb-6">🎨</div>
+          <div className="text-6xl mb-6">🤖</div>
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold text-gray-900 dark:text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-300">
-            UI/UX Design
+            Custom AI Solutions
           </h1>
           <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 max-w-3xl mx-auto">
-            User-centered design solutions that enhance user experience and engagement
+            Leverage artificial intelligence to automate processes and gain competitive advantages
           </p>
         </div>
       </section>
@@ -28,21 +28,21 @@ export default function UIUXDesignPage() {
       <section className="relative z-10 py-20 px-4 sm:px-6 lg:px-8">
         <div className="max-w-4xl mx-auto">
           <div className="backdrop-blur-xl bg-white/90 dark:bg-gray-800/80 p-8 md:p-12 rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/40 backdrop-saturate-150">
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">About UI/UX Design</h2>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-6">About Custom AI Solutions</h2>
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p className="text-gray-600 dark:text-gray-400 mb-6">
-                We create intuitive, beautiful, and user-friendly interfaces that not only look great but also provide exceptional user experiences.
+                We develop custom AI solutions and integrate ready-to-use AI services to help you automate processes, enhance decision-making, and create intelligent applications.
               </p>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Services Include:</h3>
               <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 mb-6">
-                <li>User Research & Analysis</li>
-                <li>Wireframing & Prototyping</li>
-                <li>UI Design & Visual Identity</li>
-                <li>UX Design & User Flows</li>
-                <li>Responsive Design</li>
-                <li>Design Systems & Style Guides</li>
-                <li>Usability Testing</li>
-                <li>Design-to-Development Handoff</li>
+                <li>Custom AI Development - Tailored AI models and algorithms for your specific needs</li>
+                <li>Ready-to-use AI Solutions - Integration of pre-built AI services and platforms</li>
+                <li>Machine Learning Models</li>
+                <li>Natural Language Processing</li>
+                <li>Computer Vision Solutions</li>
+                <li>Chatbot Development</li>
+                <li>AI-powered Automation</li>
+                <li>AI Consulting & Strategy</li>
               </ul>
               <div className="flex flex-wrap gap-4 mt-8">
                 <Link href="/#contact" className="px-8 py-4 rounded-xl bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-500 dark:to-primary-300 text-white font-semibold hover:from-primary-700 hover:to-primary-500 dark:hover:from-primary-600 dark:hover:to-primary-400 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">Get a Quote</Link>

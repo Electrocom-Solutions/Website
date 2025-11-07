@@ -8,8 +8,8 @@ export default function ECommerceSolutionsPage() {
     <div className="min-h-screen">
       <SectionParticles particleCount={200} />
       
-      <section className="relative min-h-[50vh] flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
-        <div className="absolute inset-0 overflow-hidden z-0">
+      <section className="relative min-h-[50vh] flex items-center justify-center py-20 px-4 sm:px-6 lg:px-8">
+        <div className="absolute inset-0 z-0">
           <div className="absolute top-20 right-20 w-96 h-96 bg-primary-400/10 dark:bg-primary-500/10 rounded-full blur-3xl animate-pulse-slow"></div>
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-400/10 dark:bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
         </div>
@@ -35,18 +35,19 @@ export default function ECommerceSolutionsPage() {
               </p>
               <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">Our Services Include:</h3>
               <ul className="list-disc list-inside space-y-2 text-gray-600 dark:text-gray-400 mb-6">
-                <li>E-Commerce Platform Development</li>
-                <li>Payment Gateway Integration</li>
+                <li>Shopify Store Development - Custom Shopify themes and app development</li>
+                <li>Custom Store Development - Bespoke e-commerce platforms built from scratch</li>
+                <li>Payment Gateway Integration - Secure payment processing with multiple gateways</li>
                 <li>Inventory Management Systems</li>
-                <li>Shopping Cart Solutions</li>
-                <li>Order Management</li>
+                <li>Order Management & Fulfillment</li>
                 <li>Product Catalog Management</li>
                 <li>Customer Account Management</li>
                 <li>Analytics & Reporting</li>
+                <li>Multi-channel Integration</li>
               </ul>
               <div className="flex flex-wrap gap-4 mt-8">
                 <Link href="/#contact" className="px-8 py-4 rounded-xl bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-500 dark:to-primary-300 text-white font-semibold hover:from-primary-700 hover:to-primary-500 dark:hover:from-primary-600 dark:hover:to-primary-400 transition-all shadow-lg hover:shadow-xl transform hover:-translate-y-1">Get a Quote</Link>
-                <Link href="/services/software-solutions" className="px-8 py-4 rounded-xl border-2 border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 font-semibold hover:bg-primary-600 dark:hover:bg-primary-400 hover:text-white transition-all">Back to Services</Link>
+                <Link href="/services/software-solutions" className="px-8 py-4 rounded-xl border-2 border-primary-600 dark:border-primary-400 text-primary-600 dark:text-primary-400 font-semibold hover:bg-primary-600 dark:hover:bg-primary-400 hover:text-white dark:hover:text-white transition-all">Back to Services</Link>
               </div>
             </div>
           </div>
