@@ -85,8 +85,18 @@ export default function OurExpertise() {
       <SectionParticles particleCount={180} />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Our Expertise</h2>
-          <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto"></div>
+          <span className="inline-block text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-100/50 dark:bg-primary-900/30 rounded-full px-4 py-2 mb-4 animate-fade-in">
+            What We Do
+          </span>
+          <h2 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-300">
+            Our Expertise
+          </h2>
+          <div className="w-40 h-2 bg-gradient-to-r from-transparent via-primary-600 dark:via-primary-400 to-transparent mx-auto mb-8 relative">
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary-600 dark:bg-primary-400 animate-pulse-slow"></span>
+          </div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+            Comprehensive solutions tailored to your business needs
+          </p>
         </div>
 
         <div className={`grid md:grid-cols-2 gap-8 ${isVisible ? 'animate-fade-in' : ''}`}>
@@ -99,13 +109,13 @@ export default function OurExpertise() {
               <div className="relative flex items-start space-x-4 mb-4">
                 <div className="text-5xl transform group-hover:scale-110 transition-transform duration-300">{item.icon}</div>
                 <div className="flex-1">
-                  <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
-                  <p className="text-gray-700 dark:text-gray-300 mb-4">{item.description}</p>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-2">{item.title}</h3>
+                  <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-4">{item.description}</p>
                   <ul className="space-y-2">
                     {item.services.map((service, serviceIndex) => (
                       <li key={serviceIndex} className="flex items-start group/item">
                         <span className="text-primary-600 dark:text-primary-400 mr-2 font-bold group-hover/item:scale-125 transition-transform duration-300">•</span>
-                        <span className="text-gray-700 dark:text-gray-300">{service}</span>
+                        <span className="text-base md:text-lg text-gray-600 dark:text-gray-400">{service}</span>
                       </li>
                     ))}
                   </ul>
@@ -116,11 +126,11 @@ export default function OurExpertise() {
         </div>
 
         <div className={`mt-12 backdrop-blur-xl bg-primary-50/80 dark:bg-primary-900/30 p-8 rounded-xl border border-primary-100/50 dark:border-primary-800/50 backdrop-saturate-150 ${isVisible ? 'animate-scale-in' : ''}`} style={{ animationDelay: '0.4s' }}>
-          <h4 className="text-xl font-bold text-gray-900 dark:text-white mb-4">Manpower Examples</h4>
+          <h4 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4">Manpower Examples</h4>
           <div className="grid md:grid-cols-2 gap-6">
             <div>
-              <h5 className="font-semibold text-gray-900 dark:text-white mb-2">Hospitals:</h5>
-              <ul className="space-y-1 text-gray-700 dark:text-gray-300">
+              <h5 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Hospitals:</h5>
+              <ul className="space-y-1 text-base md:text-lg text-gray-600 dark:text-gray-400">
                 <li className="flex items-center">
                   <span className="text-primary-600 dark:text-primary-400 mr-2">•</span>
                   Doctors (contract-based)
@@ -136,8 +146,8 @@ export default function OurExpertise() {
               </ul>
             </div>
             <div>
-              <h5 className="font-semibold text-gray-900 dark:text-white mb-2">Government Departments:</h5>
-              <ul className="space-y-1 text-gray-700 dark:text-gray-300">
+              <h5 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">Government Departments:</h5>
+              <ul className="space-y-1 text-base md:text-lg text-gray-600 dark:text-gray-400">
                 <li className="flex items-center">
                   <span className="text-primary-600 dark:text-primary-400 mr-2">•</span>
                   Skilled and unskilled manpower for support and operational roles

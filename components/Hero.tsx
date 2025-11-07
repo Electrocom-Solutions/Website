@@ -57,7 +57,7 @@ export default function Hero() {
               />
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-12 leading-relaxed animate-slide-up max-w-3xl mx-auto" style={{ animationDelay: '0.2s' }}>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 mb-12 leading-relaxed animate-slide-up max-w-3xl mx-auto" style={{ animationDelay: '0.2s' }}>
             From advanced software development and IT networking to manpower supply and hardware maintenance — Electrocom provides complete, reliable, and customized solutions for your organization.
           </p>
           <div className="flex flex-col sm:flex-row gap-6 justify-center animate-slide-up" style={{ animationDelay: '0.4s' }}>

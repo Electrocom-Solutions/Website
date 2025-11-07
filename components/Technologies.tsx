@@ -46,15 +46,22 @@ export default function Technologies() {
       <SectionParticles particleCount={200} />
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="text-center mb-16">
-          <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-4">Cutting-Edge Tech Stack</h2>
-          <div className="w-24 h-1 bg-primary-600 dark:bg-primary-400 mx-auto mb-4"></div>
-          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+          <span className="inline-block text-sm font-medium text-primary-600 dark:text-primary-400 bg-primary-100/50 dark:bg-primary-900/30 rounded-full px-4 py-2 mb-4 animate-fade-in">
+            Our Tech Stack
+          </span>
+          <h2 className="text-5xl md:text-6xl font-extrabold text-gray-900 dark:text-white mb-6 bg-clip-text text-transparent bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-400 dark:to-primary-300">
+            Cutting-Edge Tech Stack
+          </h2>
+          <div className="w-40 h-2 bg-gradient-to-r from-transparent via-primary-600 dark:via-primary-400 to-transparent mx-auto mb-8 relative">
+            <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary-600 dark:bg-primary-400 animate-pulse-slow"></span>
+          </div>
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             From frontend to backend, we cover the full stack with modern, efficient technologies that power your digital success.
           </p>
         </div>
 
         <div className={`mb-16 ${isVisible ? 'animate-fade-in' : ''}`}>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Frontend & Backend Technologies</h3>
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Frontend & Backend Technologies</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-6">
             {frontendBackend.map((tech, index) => (
               <div
@@ -67,10 +74,10 @@ export default function Technologies() {
                   <div className="text-5xl mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
                     {tech.icon}
                   </div>
-                  <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  <h4 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {tech.name}
                   </h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{tech.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{tech.description}</p>
                 </div>
               </div>
             ))}
@@ -78,7 +85,7 @@ export default function Technologies() {
         </div>
 
         <div className={`${isVisible ? 'animate-fade-in' : ''}`} style={{ animationDelay: '0.3s' }}>
-          <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-8 text-center">Databases</h3>
+          <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Databases</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {[
               { name: 'MySQL', icon: '🗄️', description: 'Relational database management', gradient: 'from-blue-600 to-blue-800' },
@@ -97,10 +104,10 @@ export default function Technologies() {
                   <div className="text-5xl mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
                     {db.icon}
                   </div>
-                  <h4 className="text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                  <h4 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {db.name}
                   </h4>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">{db.description}</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">{db.description}</p>
                 </div>
               </div>
             ))}

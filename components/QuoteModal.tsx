@@ -94,8 +94,8 @@ export default function QuoteModal({ isOpen, onClose }: QuoteModalProps) {
                 <div className="relative bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-500 dark:to-primary-300 p-6">
                   <div className="flex items-center justify-between">
                     <div>
-                      <h2 className="text-3xl font-bold text-white mb-2">Get a Quote</h2>
-                      <p className="text-primary-100 dark:text-primary-50">Fill in the details below and we'll get back to you</p>
+                      <h2 className="text-2xl md:text-3xl font-bold text-white mb-2">Get a Quote</h2>
+                      <p className="text-sm md:text-base text-primary-100 dark:text-primary-50">Fill in the details below and we'll get back to you</p>
                     </div>
                     <button
                       onClick={handleClose}

@@ -2,10 +2,12 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import QuoteModal from './QuoteModal'
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [scrolled, setScrolled] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
 
   useEffect(() => {
     const handleScroll = () => {
@@ -77,6 +79,22 @@ export default function Header() {
             </Link>
           </nav>
 
+          {/* Action Buttons */}
+          <div className="hidden lg:flex items-center space-x-4">
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="px-4 py-2 rounded-xl bg-transparent border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-all duration-300"
+            >
+              Free Consultation
+            </button>
+            <button
+              onClick={() => setIsModalOpen(true)}
+              className="px-6 py-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-500 dark:to-primary-300 text-white font-semibold hover:from-primary-700 hover:to-primary-500 dark:hover:from-primary-600 dark:hover:to-primary-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+            >
+              Get a Quote
+            </button>
+          </div>
+
           <div className="flex items-center space-x-2 md:hidden">
             <button
               className="p-2 text-gray-700 dark:text-gray-300 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
@@ -143,9 +161,34 @@ export default function Header() {
                 Contact
               </Link>
             </nav>
+            
+            {/* Mobile Action Buttons */}
+            <div className="flex flex-col space-y-3 mt-4">
+              <button
+                onClick={() => {
+                  setIsModalOpen(true)
+                  setIsMenuOpen(false)
+                }}
+                className="w-full px-4 py-2 rounded-xl bg-transparent border-2 border-gray-900 dark:border-white text-gray-900 dark:text-white font-semibold hover:bg-gray-900 dark:hover:bg-white hover:text-white dark:hover:text-gray-900 transition-all duration-300"
+              >
+                Free Consultation
+              </button>
+              <button
+                onClick={() => {
+                  setIsModalOpen(true)
+                  setIsMenuOpen(false)
+                }}
+                className="w-full px-6 py-2 rounded-xl bg-gradient-to-r from-primary-600 to-primary-400 dark:from-primary-500 dark:to-primary-300 text-white font-semibold hover:from-primary-700 hover:to-primary-500 dark:hover:from-primary-600 dark:hover:to-primary-400 transition-all duration-300 shadow-lg hover:shadow-xl"
+              >
+                Get a Quote
+              </button>
+            </div>
           </div>
         )}
       </div>
+
+      {/* Quote Modal */}
+      <QuoteModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </header>
   )
 }

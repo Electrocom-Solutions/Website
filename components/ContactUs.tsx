@@ -75,7 +75,7 @@ export default function ContactUs() {
           <div className="w-40 h-2 bg-gradient-to-r from-transparent via-primary-600 dark:via-primary-400 to-transparent mx-auto mb-8 relative">
             <span className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-primary-600 dark:bg-primary-400 animate-pulse-slow"></span>
           </div>
-          <p className="text-2xl text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-3xl mx-auto leading-relaxed">
             Have a project or tender requirement? We're ready to help.
           </p>
         </div>
@@ -85,7 +85,7 @@ export default function ContactUs() {
             {/* Contact Information */}
             <div className="space-y-6">
               <div className="backdrop-blur-xl bg-white/90 dark:bg-gray-800/80 p-8 rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/40 backdrop-saturate-150">
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Contact Information</h3>
+                <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">Contact Information</h3>
                 
                 <div className="space-y-6">
                   <div className="flex items-start space-x-4 group">
@@ -95,7 +95,7 @@ export default function ContactUs() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Email</h4>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Email</h4>
                       <a 
                         href="mailto:electrocomchittor@yahoo.com" 
                         className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-300"
@@ -112,7 +112,7 @@ export default function ContactUs() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Phone</h4>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Phone</h4>
                       <a 
                         href="tel:+919414110473" 
                         className="text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors duration-300"
@@ -130,8 +130,8 @@ export default function ContactUs() {
                       </svg>
                     </div>
                     <div>
-                      <h4 className="font-semibold text-gray-900 dark:text-white mb-1">Address</h4>
-                      <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-1">Address</h4>
+                      <p className="text-base md:text-lg text-gray-600 dark:text-gray-400 leading-relaxed">
                         12 Pratap Nagar Market, Chittorgarh, Rajasthan<br />
                         Country: India<br />
                         Postal Code: 382421
@@ -143,7 +143,7 @@ export default function ContactUs() {
 
               {/* Social Media */}
               <div className="backdrop-blur-xl bg-white/90 dark:bg-gray-800/80 p-8 rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/40 backdrop-saturate-150">
-                <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-6">Follow Us</h3>
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-6">Follow Us</h3>
                 <div className="flex space-x-4">
                   <a 
                     href="#" 
@@ -178,7 +178,7 @@ export default function ContactUs() {
 
             {/* Contact Form */}
             <div className="backdrop-blur-xl bg-white/90 dark:bg-gray-800/80 p-8 rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/40 backdrop-saturate-150">
-              <h3 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">Send us a Message</h3>
+              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-6">Send us a Message</h3>
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div>
                   <label htmlFor="name" className="block text-sm font-semibold text-gray-900 dark:text-white mb-2">

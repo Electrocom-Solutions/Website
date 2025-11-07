@@ -8,15 +8,15 @@ export default function Footer() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid md:grid-cols-4 gap-8">
           <div>
-            <h3 className="text-2xl font-bold mb-4">Electrocom</h3>
-            <p className="text-gray-400 dark:text-gray-500">
+            <h3 className="text-xl md:text-2xl font-bold mb-4">Electrocom</h3>
+            <p className="text-sm md:text-base text-gray-400 dark:text-gray-500">
               Your Trusted Partner for IT, Software & Manpower Solutions.
             </p>
           </div>
           
           <div>
-            <h4 className="font-semibold mb-4">Quick Links</h4>
-            <ul className="space-y-2 text-gray-400 dark:text-gray-500">
+            <h4 className="text-base md:text-lg font-semibold mb-4">Quick Links</h4>
+            <ul className="space-y-2 text-sm md:text-base text-gray-400 dark:text-gray-500">
               <li>
                 <Link href="#home" className="hover:text-white dark:hover:text-gray-300 transition-colors duration-300">
                   Home
@@ -46,8 +46,8 @@ export default function Footer() {
           </div>
           
           <div>
-            <h4 className="font-semibold mb-4">Services</h4>
-            <ul className="space-y-2 text-gray-400 dark:text-gray-500">
+            <h4 className="text-base md:text-lg font-semibold mb-4">Services</h4>
+            <ul className="space-y-2 text-sm md:text-base text-gray-400 dark:text-gray-500">
               <li>Hardware Maintenance</li>
               <li>Software Solutions</li>
               <li>Network Solutions</li>
@@ -56,15 +56,15 @@ export default function Footer() {
           </div>
           
           <div>
-            <h4 className="font-semibold mb-4">Contact</h4>
-            <ul className="space-y-2 text-gray-400 dark:text-gray-500">
-              <li>Email: info@electrocom.in</li>
-              <li>Phone: +91-XXXXXXXXXX</li>
+            <h4 className="text-base md:text-lg font-semibold mb-4">Contact</h4>
+            <ul className="space-y-2 text-sm md:text-base text-gray-400 dark:text-gray-500">
+              <li>Email: electrocomchittor@yahoo.com</li>
+              <li>Phone: +91 9414110473</li>
             </ul>
           </div>
         </div>
         
-        <div className="border-t border-gray-800 dark:border-gray-900 mt-8 pt-8 text-center text-gray-400 dark:text-gray-500">
+        <div className="border-t border-gray-800 dark:border-gray-900 mt-8 pt-8 text-center text-sm md:text-base text-gray-400 dark:text-gray-500">
           <p>&copy; {new Date().getFullYear()} Electrocom. All rights reserved.</p>
         </div>
       </div>

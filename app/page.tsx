@@ -12,8 +12,8 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <Hero />
-      <AboutUs />
       <Statistics />
+      <AboutUs />
       <OurExpertise />
       <Technologies />
       <HowWeWork />

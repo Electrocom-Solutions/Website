@@ -116,7 +116,7 @@ export default function Statistics() {
                     {stat.value}{stat.suffix || '+'}
                   </div>
                 </div>
-                <h3 className="text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+                <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                   {stat.label}
                 </h3>
               </div>
