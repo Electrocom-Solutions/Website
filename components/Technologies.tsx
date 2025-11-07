@@ -29,12 +29,42 @@ export default function Technologies() {
   }, [])
 
   const frontendBackend = [
-    { name: 'Next.js', icon: '⚡', description: 'React framework for production', gradient: 'from-gray-800 to-gray-900' },
-    { name: 'React.js', icon: '⚛️', description: 'JavaScript library for UI', gradient: 'from-blue-500 to-cyan-500' },
-    { name: 'Flask', icon: '🌶️', description: 'Lightweight Python web framework', gradient: 'from-red-500 to-orange-500' },
-    { name: 'Flutter', icon: '📱', description: 'Cross-platform mobile framework', gradient: 'from-blue-400 to-blue-600' },
-    { name: 'Django', icon: '🎸', description: 'High-level Python web framework', gradient: 'from-green-600 to-green-800' },
-    { name: 'Node.js', icon: '🟢', description: 'JavaScript runtime environment', gradient: 'from-green-500 to-emerald-600' },
+    { 
+      name: 'Next.js', 
+      logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nextjs/nextjs-original.svg',
+      description: 'React framework for production', 
+      gradient: 'from-gray-800 to-gray-900' 
+    },
+    { 
+      name: 'React.js', 
+      logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg',
+      description: 'JavaScript library for UI', 
+      gradient: 'from-blue-500 to-cyan-500' 
+    },
+    { 
+      name: 'Flask', 
+      logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flask/flask-original.svg',
+      description: 'Lightweight Python web framework', 
+      gradient: 'from-red-500 to-orange-500' 
+    },
+    { 
+      name: 'Flutter', 
+      logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/flutter/flutter-original.svg',
+      description: 'Cross-platform mobile framework', 
+      gradient: 'from-blue-400 to-blue-600' 
+    },
+    { 
+      name: 'Django', 
+      logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/django/django-plain.svg',
+      description: 'High-level Python web framework', 
+      gradient: 'from-green-600 to-green-800' 
+    },
+    { 
+      name: 'Node.js', 
+      logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg',
+      description: 'JavaScript runtime environment', 
+      gradient: 'from-green-500 to-emerald-600' 
+    },
   ]
 
   return (
@@ -71,8 +101,13 @@ export default function Technologies() {
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${tech.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative">
-                  <div className="text-5xl mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
-                    {tech.icon}
+                  <div className="mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 flex items-center justify-center">
+                    <img 
+                      src={tech.logo} 
+                      alt={tech.name}
+                      className="w-16 h-16 object-contain dark:invert-0"
+                      style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                    />
                   </div>
                   <h4 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {tech.name}
@@ -88,11 +123,36 @@ export default function Technologies() {
           <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-8 text-center">Databases</h3>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
             {[
-              { name: 'MySQL', icon: '🗄️', description: 'Relational database management', gradient: 'from-blue-600 to-blue-800' },
-              { name: 'PostgreSQL', icon: '🐘', description: 'Advanced open-source database', gradient: 'from-blue-500 to-indigo-600' },
-              { name: 'MongoDB', icon: '🍃', description: 'NoSQL document database', gradient: 'from-green-500 to-green-700' },
-              { name: 'Oracle SQL', icon: '🔷', description: 'Enterprise database solution', gradient: 'from-red-600 to-red-800' },
-              { name: 'SQLite', icon: '💾', description: 'Lightweight embedded database', gradient: 'from-gray-600 to-gray-800' },
+              { 
+                name: 'MySQL', 
+                logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg',
+                description: 'Relational database management', 
+                gradient: 'from-blue-600 to-blue-800' 
+              },
+              { 
+                name: 'PostgreSQL', 
+                logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postgresql/postgresql-original.svg',
+                description: 'Advanced open-source database', 
+                gradient: 'from-blue-500 to-indigo-600' 
+              },
+              { 
+                name: 'MongoDB', 
+                logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg',
+                description: 'NoSQL document database', 
+                gradient: 'from-green-500 to-green-700' 
+              },
+              { 
+                name: 'Oracle SQL', 
+                logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/oracle/oracle-original.svg',
+                description: 'Enterprise database solution', 
+                gradient: 'from-red-600 to-red-800' 
+              },
+              { 
+                name: 'SQLite', 
+                logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/sqlite/sqlite-original.svg',
+                description: 'Lightweight embedded database', 
+                gradient: 'from-gray-600 to-gray-800' 
+              },
             ].map((db, index) => (
               <div
                 key={index}
@@ -101,8 +161,13 @@ export default function Technologies() {
               >
                 <div className={`absolute inset-0 bg-gradient-to-br ${db.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-300`}></div>
                 <div className="relative">
-                  <div className="text-5xl mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300">
-                    {db.icon}
+                  <div className="mb-3 transform group-hover:scale-125 group-hover:rotate-12 transition-all duration-300 flex items-center justify-center">
+                    <img 
+                      src={db.logo} 
+                      alt={db.name}
+                      className="w-16 h-16 object-contain dark:invert-0"
+                      style={{ filter: 'drop-shadow(0 2px 4px rgba(0,0,0,0.1))' }}
+                    />
                   </div>
                   <h4 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
                     {db.name}

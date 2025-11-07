@@ -158,14 +158,9 @@ export default function ClientSlider() {
                 key={`${client}-${index}`}
                 className="flex-shrink-0 backdrop-blur-xl bg-white/90 dark:bg-gray-800/80 px-8 py-6 rounded-2xl shadow-xl border-2 border-white/30 dark:border-gray-700/40 backdrop-saturate-150 transform hover:scale-105 transition-transform duration-300"
               >
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-primary-500 to-primary-600 dark:from-primary-400 dark:to-primary-500 flex items-center justify-center text-white font-bold text-lg">
-                    {client.charAt(0)}
-                  </div>
-                  <span className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white whitespace-nowrap">
-                    {client}
-                  </span>
-                </div>
+                <span className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white whitespace-nowrap">
+                  {client}
+                </span>
               </div>
             ))}
           </div>
