@@ -111,8 +111,32 @@ const Particles: React.FC<ParticlesProps> = ({
     const container = containerRef.current
     if (!container) return
 
+    // Ensure container has dimensions
+    const ensureDimensions = () => {
+      const rect = container.getBoundingClientRect()
+      if (rect.width === 0 || rect.height === 0) {
+        // Use viewport dimensions if container has no size
+        const width = window.innerWidth
+        const height = window.innerHeight
+        container.style.width = `${width}px`
+        container.style.height = `${height}px`
+      }
+    }
+    ensureDimensions()
+
     const renderer = new Renderer({ depth: false, alpha: true })
     const gl = renderer.gl
+    
+    // Ensure canvas is properly styled for mobile
+    gl.canvas.style.display = 'block'
+    gl.canvas.style.width = '100%'
+    gl.canvas.style.height = '100%'
+    gl.canvas.style.position = 'absolute'
+    gl.canvas.style.top = '0'
+    gl.canvas.style.left = '0'
+    gl.canvas.style.pointerEvents = 'none'
+    gl.canvas.style.touchAction = 'none'
+    
     container.appendChild(gl.canvas)
     gl.clearColor(0, 0, 0, 0)
 
@@ -120,25 +144,61 @@ const Particles: React.FC<ParticlesProps> = ({
     camera.position.set(0, 0, cameraDistance)
 
     const resize = () => {
-      const width = container.clientWidth
-      const height = container.clientHeight
-      renderer.setSize(width, height)
-      camera.perspective({ aspect: gl.canvas.width / gl.canvas.height })
+      ensureDimensions()
+      const width = container.clientWidth || window.innerWidth
+      const height = container.clientHeight || window.innerHeight
+      
+      // Ensure minimum dimensions
+      if (width > 0 && height > 0) {
+        renderer.setSize(width, height)
+        const aspect = width / height
+        if (aspect > 0 && isFinite(aspect)) {
+          camera.perspective({ aspect })
+        }
+      }
     }
 
     window.addEventListener('resize', resize, false)
+    window.addEventListener('orientationchange', resize, false)
+    
+    // Initial resize with delay to ensure DOM is ready
+    setTimeout(resize, 0)
     resize()
 
-    const handleMouseMove = (e: MouseEvent) => {
+    const handleMouseMove = (e: MouseEvent | TouchEvent) => {
       const rect = container.getBoundingClientRect()
-      const x = ((e.clientX - rect.left) / rect.width) * 2 - 1
-      const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1)
+      let clientX: number, clientY: number
+      
+      if (e instanceof TouchEvent && e.touches.length > 0) {
+        clientX = e.touches[0].clientX
+        clientY = e.touches[0].clientY
+      } else if (e instanceof MouseEvent) {
+        clientX = e.clientX
+        clientY = e.clientY
+      } else {
+        return
+      }
+      
+      const x = ((clientX - rect.left) / rect.width) * 2 - 1
+      const y = -(((clientY - rect.top) / rect.height) * 2 - 1)
       mouseRef.current = { x, y }
     }
 
-    const handleWindowMouseMove = (e: MouseEvent) => {
-      const x = (e.clientX / window.innerWidth) * 2 - 1
-      const y = -((e.clientY / window.innerHeight) * 2 - 1)
+    const handleWindowMouseMove = (e: MouseEvent | TouchEvent) => {
+      let clientX: number, clientY: number
+      
+      if (e instanceof TouchEvent && e.touches.length > 0) {
+        clientX = e.touches[0].clientX
+        clientY = e.touches[0].clientY
+      } else if (e instanceof MouseEvent) {
+        clientX = e.clientX
+        clientY = e.clientY
+      } else {
+        return
+      }
+      
+      const x = (clientX / window.innerWidth) * 2 - 1
+      const y = -((clientY / window.innerHeight) * 2 - 1)
       mouseRef.current = { x, y }
     }
 
@@ -146,8 +206,10 @@ const Particles: React.FC<ParticlesProps> = ({
       // Use window events for global particles, container events for section particles
       if (useWindowEvents) {
         window.addEventListener('mousemove', handleWindowMouseMove, { passive: true })
+        window.addEventListener('touchmove', handleWindowMouseMove, { passive: true })
       } else {
         container.addEventListener('mousemove', handleMouseMove, { passive: true })
+        container.addEventListener('touchmove', handleMouseMove, { passive: true })
       }
     }
 
@@ -227,9 +289,12 @@ const Particles: React.FC<ParticlesProps> = ({
 
     return () => {
       window.removeEventListener('resize', resize)
+      window.removeEventListener('orientationchange', resize)
       if (moveParticlesOnHover) {
         window.removeEventListener('mousemove', handleWindowMouseMove)
+        window.removeEventListener('touchmove', handleWindowMouseMove)
         container.removeEventListener('mousemove', handleMouseMove)
+        container.removeEventListener('touchmove', handleMouseMove)
       }
       cancelAnimationFrame(animationFrameId)
       if (container.contains(gl.canvas)) {
@@ -251,7 +316,18 @@ const Particles: React.FC<ParticlesProps> = ({
     particleColors
   ])
 
-  return <div ref={containerRef} className={`relative w-full h-full ${className || ''}`} />
+  return (
+    <div 
+      ref={containerRef} 
+      className={`relative w-full h-full ${className || ''}`}
+      style={{ 
+        minWidth: '100%', 
+        minHeight: '100%',
+        position: 'relative',
+        overflow: 'hidden'
+      }}
+    />
+  )
 }
 
 export default Particles

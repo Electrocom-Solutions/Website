@@ -348,7 +348,10 @@ class DiscGeometry extends Geometry {
 
 function createShader(gl: WebGL2RenderingContext, type: number, source: string): WebGLShader | null {
   const shader = gl.createShader(type);
-  if (!shader) return null;
+  if (!shader) {
+    console.error(`Failed to create ${type === gl.VERTEX_SHADER ? 'vertex' : 'fragment'} shader`);
+    return null;
+  }
   gl.shaderSource(shader, source);
   gl.compileShader(shader);
   const success = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
@@ -357,7 +360,8 @@ function createShader(gl: WebGL2RenderingContext, type: number, source: string):
     return shader;
   }
 
-  console.error(gl.getShaderInfoLog(shader));
+  const errorLog = gl.getShaderInfoLog(shader);
+  console.error(`Shader compilation error (${type === gl.VERTEX_SHADER ? 'vertex' : 'fragment'}):`, errorLog);
   gl.deleteShader(shader);
   return null;
 }
@@ -369,14 +373,22 @@ function createProgram(
   attribLocations?: Record<string, number>
 ): WebGLProgram | null {
   const program = gl.createProgram();
-  if (!program) return null;
+  if (!program) {
+    console.error('Failed to create WebGL program');
+    return null;
+  }
 
-  [gl.VERTEX_SHADER, gl.FRAGMENT_SHADER].forEach((type, ndx) => {
-    const shader = createShader(gl, type, shaderSources[ndx]);
-    if (shader) {
-      gl.attachShader(program, shader);
-    }
-  });
+  const vertexShader = createShader(gl, gl.VERTEX_SHADER, shaderSources[0]);
+  const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, shaderSources[1]);
+
+  if (!vertexShader || !fragmentShader) {
+    console.error('Failed to create shaders');
+    gl.deleteProgram(program);
+    return null;
+  }
+
+  gl.attachShader(program, vertexShader);
+  gl.attachShader(program, fragmentShader);
 
   if (transformFeedbackVaryings) {
     gl.transformFeedbackVaryings(program, transformFeedbackVaryings, gl.SEPARATE_ATTRIBS);
@@ -394,10 +406,14 @@ function createProgram(
   const success = gl.getProgramParameter(program, gl.LINK_STATUS);
 
   if (success) {
+    // Clean up shaders after linking
+    gl.deleteShader(vertexShader);
+    gl.deleteShader(fragmentShader);
     return program;
   }
 
-  console.error(gl.getProgramInfoLog(program));
+  const errorLog = gl.getProgramInfoLog(program);
+  console.error('Program linking error:', errorLog);
   gl.deleteProgram(program);
   return null;
 }
@@ -776,20 +792,25 @@ class InfiniteGridMenu {
       aInstanceMatrix: 3
     });
 
+    if (!this.discProgram) {
+      console.error('Failed to create WebGL program');
+      throw new Error('Failed to create WebGL program');
+    }
+
     this.discLocations = {
-      aModelPosition: gl.getAttribLocation(this.discProgram!, 'aModelPosition'),
-      aModelUvs: gl.getAttribLocation(this.discProgram!, 'aModelUvs'),
-      aInstanceMatrix: gl.getAttribLocation(this.discProgram!, 'aInstanceMatrix'),
-      uWorldMatrix: gl.getUniformLocation(this.discProgram!, 'uWorldMatrix'),
-      uViewMatrix: gl.getUniformLocation(this.discProgram!, 'uViewMatrix'),
-      uProjectionMatrix: gl.getUniformLocation(this.discProgram!, 'uProjectionMatrix'),
-      uCameraPosition: gl.getUniformLocation(this.discProgram!, 'uCameraPosition'),
-      uScaleFactor: gl.getUniformLocation(this.discProgram!, 'uScaleFactor'),
-      uRotationAxisVelocity: gl.getUniformLocation(this.discProgram!, 'uRotationAxisVelocity'),
-      uTex: gl.getUniformLocation(this.discProgram!, 'uTex'),
-      uFrames: gl.getUniformLocation(this.discProgram!, 'uFrames'),
-      uItemCount: gl.getUniformLocation(this.discProgram!, 'uItemCount'),
-      uAtlasSize: gl.getUniformLocation(this.discProgram!, 'uAtlasSize')
+      aModelPosition: gl.getAttribLocation(this.discProgram, 'aModelPosition'),
+      aModelUvs: gl.getAttribLocation(this.discProgram, 'aModelUvs'),
+      aInstanceMatrix: gl.getAttribLocation(this.discProgram, 'aInstanceMatrix'),
+      uWorldMatrix: gl.getUniformLocation(this.discProgram, 'uWorldMatrix'),
+      uViewMatrix: gl.getUniformLocation(this.discProgram, 'uViewMatrix'),
+      uProjectionMatrix: gl.getUniformLocation(this.discProgram, 'uProjectionMatrix'),
+      uCameraPosition: gl.getUniformLocation(this.discProgram, 'uCameraPosition'),
+      uScaleFactor: gl.getUniformLocation(this.discProgram, 'uScaleFactor'),
+      uRotationAxisVelocity: gl.getUniformLocation(this.discProgram, 'uRotationAxisVelocity'),
+      uTex: gl.getUniformLocation(this.discProgram, 'uTex'),
+      uFrames: gl.getUniformLocation(this.discProgram, 'uFrames'),
+      uItemCount: gl.getUniformLocation(this.discProgram, 'uItemCount'),
+      uAtlasSize: gl.getUniformLocation(this.discProgram, 'uAtlasSize')
     };
 
     this.discGeo = new DiscGeometry(56, 1);
@@ -1061,6 +1082,7 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null) as MutableRefObject<HTMLCanvasElement | null>;
   const [activeItem, setActiveItem] = useState<MenuItem | null>(null);
   const [isMoving, setIsMoving] = useState<boolean>(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -1073,14 +1095,30 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
     };
 
     if (canvas) {
-      sketch = new InfiniteGridMenu(canvas, items.length ? items : defaultItems, handleActiveItem, setIsMoving, sk =>
-        sk.run()
-      );
+      try {
+        // Check if WebGL2 is supported
+        const gl = canvas.getContext('webgl2');
+        if (!gl) {
+          throw new Error('WebGL 2 is not supported in this browser');
+        }
+
+        sketch = new InfiniteGridMenu(canvas, items.length ? items : defaultItems, handleActiveItem, setIsMoving, sk =>
+          sk.run()
+        );
+        setError(null);
+      } catch (err) {
+        console.error('Failed to initialize InfiniteMenu:', err);
+        setError(err instanceof Error ? err.message : 'Failed to initialize 3D menu');
+      }
     }
 
     const handleResize = () => {
       if (sketch) {
-        sketch.resize();
+        try {
+          sketch.resize();
+        } catch (err) {
+          console.error('Error during resize:', err);
+        }
       }
     };
 
@@ -1100,6 +1138,18 @@ const InfiniteMenu: FC<InfiniteMenuProps> = ({ items = [] }) => {
       console.log('Internal route:', activeItem.link);
     }
   };
+
+  if (error) {
+    return (
+      <div className="relative w-full h-full flex items-center justify-center">
+        <div className="text-center p-8">
+          <p className="text-red-400 text-lg mb-2">Failed to load 3D menu</p>
+          <p className="text-gray-400 text-sm">{error}</p>
+          <p className="text-gray-500 text-xs mt-4">Please try refreshing the page or use a different browser</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="relative w-full h-full">
