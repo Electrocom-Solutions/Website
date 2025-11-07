@@ -10,6 +10,7 @@ import HowWeWork from '@/components/HowWeWork'
 import PastProjects from '@/components/PastProjects'
 import IndustriesWeServe from '@/components/IndustriesWeServe'
 import Statistics from '@/components/Statistics'
+import ClientSlider from '@/components/ClientSlider'
 import ContactUs from '@/components/ContactUs'
 
 function HomeContent() {
@@ -33,6 +34,7 @@ function HomeContent() {
     <div className="min-h-screen">
       <Hero />
       <Statistics />
+      <ClientSlider />
       <AboutUs />
       <OurExpertise />
       <Technologies />
