@@ -5,6 +5,7 @@ import Technologies from '@/components/Technologies'
 import HowWeWork from '@/components/HowWeWork'
 import PastProjects from '@/components/PastProjects'
 import IndustriesWeServe from '@/components/IndustriesWeServe'
+import Statistics from '@/components/Statistics'
 import ContactUs from '@/components/ContactUs'
 
 export default function Home() {
@@ -12,6 +13,7 @@ export default function Home() {
     <div className="min-h-screen">
       <Hero />
       <AboutUs />
+      <Statistics />
       <OurExpertise />
       <Technologies />
       <HowWeWork />
