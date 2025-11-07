@@ -40,7 +40,7 @@ export default function LogoutPage() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-cyan-400/5 dark:bg-cyan-500/5 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '2s' }}></div>
       </div>
 
-      <div className="relative max-w-md w-full mx-auto px-4 sm:px-6 lg:px-8 z-10">
+      <div className="relative max-w-lg w-full mx-auto px-4 sm:px-6 lg:px-8 z-10">
         <div className="backdrop-blur-xl bg-white/90 dark:bg-gray-800/80 p-8 md:p-10 rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/40 backdrop-saturate-150 text-center">
           {isLoggingOut ? (
             <>

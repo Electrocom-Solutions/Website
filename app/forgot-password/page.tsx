@@ -42,7 +42,7 @@ export default function ForgotPasswordPage() {
           <div className="absolute bottom-20 left-20 w-96 h-96 bg-purple-400/10 dark:bg-purple-500/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
         </div>
 
-        <div className="relative max-w-md w-full mx-auto px-4 sm:px-6 lg:px-8 z-10">
+        <div className="relative max-w-lg w-full mx-auto px-4 sm:px-6 lg:px-8 z-10">
           <div className="backdrop-blur-xl bg-white/90 dark:bg-gray-800/80 p-8 md:p-10 rounded-3xl shadow-2xl border-2 border-white/30 dark:border-gray-700/40 backdrop-saturate-150 text-center">
             <div className="mb-6">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-100 dark:bg-green-900/30 mb-4">
