@@ -166,6 +166,228 @@ function CustomDropdown({ id, name, value, options, placeholder, onChange, filte
   )
 }
 
+// Custom Date Picker Component
+interface CustomDatePickerProps {
+  id: string
+  name: string
+  value: string
+  minDate?: string
+  onChange: (value: string) => void
+  required?: boolean
+}
+
+function CustomDatePicker({ id, name, value, minDate, onChange, required }: CustomDatePickerProps) {
+  const [isOpen, setIsOpen] = useState(false)
+  const selectedDate = value ? new Date(value) : null
+  const minDateObj = minDate ? new Date(minDate) : null
+  const initialMonth = selectedDate || minDateObj || new Date()
+  const [currentMonth, setCurrentMonth] = useState(new Date(initialMonth.getFullYear(), initialMonth.getMonth(), 1))
+  const datePickerRef = useRef<HTMLDivElement>(null)
+  const buttonRef = useRef<HTMLButtonElement>(null)
+
+  // Update current month when value changes
+  useEffect(() => {
+    if (selectedDate) {
+      setCurrentMonth(new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1))
+    }
+  }, [selectedDate])
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(event.target as Node)) {
+        setIsOpen(false)
+      }
+    }
+
+    if (isOpen) {
+      document.addEventListener('mousedown', handleClickOutside)
+      return () => document.removeEventListener('mousedown', handleClickOutside)
+    }
+  }, [isOpen])
+
+  const formatDate = (date: Date | null): string => {
+    if (!date) return ''
+    const year = date.getFullYear()
+    const month = String(date.getMonth() + 1).padStart(2, '0')
+    const day = String(date.getDate()).padStart(2, '0')
+    return `${year}-${month}-${day}`
+  }
+
+  const formatDisplayDate = (dateString: string): string => {
+    if (!dateString) return ''
+    const date = new Date(dateString)
+    return date.toLocaleDateString('en-US', { 
+      weekday: 'short', 
+      year: 'numeric', 
+      month: 'short', 
+      day: 'numeric' 
+    })
+  }
+
+  const getDaysInMonth = (date: Date) => {
+    const year = date.getFullYear()
+    const month = date.getMonth()
+    const firstDay = new Date(year, month, 1)
+    const lastDay = new Date(year, month + 1, 0)
+    const daysInMonth = lastDay.getDate()
+    const startingDayOfWeek = firstDay.getDay()
+
+    const days = []
+    
+    // Add empty cells for days before the first day of the month
+    for (let i = 0; i < startingDayOfWeek; i++) {
+      days.push(null)
+    }
+
+    // Add all days of the month
+    for (let day = 1; day <= daysInMonth; day++) {
+      days.push(new Date(year, month, day))
+    }
+
+    return days
+  }
+
+  const isDateDisabled = (date: Date): boolean => {
+    if (minDateObj) {
+      const dateStr = formatDate(date)
+      return dateStr < minDate
+    }
+    return false
+  }
+
+  const isDateSelected = (date: Date): boolean => {
+    if (!selectedDate) return false
+    return formatDate(date) === formatDate(selectedDate)
+  }
+
+  const isToday = (date: Date): boolean => {
+    const today = new Date()
+    return formatDate(date) === formatDate(today)
+  }
+
+  const handleDateSelect = (date: Date) => {
+    if (isDateDisabled(date)) return
+    onChange(formatDate(date))
+    setIsOpen(false)
+  }
+
+  const handlePrevMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() - 1, 1))
+  }
+
+  const handleNextMonth = () => {
+    setCurrentMonth(new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1))
+  }
+
+  const monthName = currentMonth.toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+  const days = getDaysInMonth(currentMonth)
+  const weekDays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
+  return (
+    <div className="relative" ref={datePickerRef}>
+      <input type="hidden" name={name} value={value} required={required} />
+      <button
+        type="button"
+        ref={buttonRef}
+        id={id}
+        onClick={() => setIsOpen(!isOpen)}
+        className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none text-left flex items-center justify-between text-base"
+        aria-expanded={isOpen}
+        aria-haspopup="dialog"
+        aria-required={required}
+      >
+        <span className={value ? '' : 'text-gray-500 dark:text-gray-400'}>
+          {value ? formatDisplayDate(value) : 'Select a date'}
+        </span>
+        <svg
+          className="w-5 h-5 text-gray-500 dark:text-gray-400"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+        </svg>
+      </button>
+
+      {isOpen && (
+        <div className="absolute z-50 w-full sm:w-[350px] mt-2 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 shadow-2xl p-4">
+          {/* Calendar Header */}
+          <div className="flex items-center justify-between mb-4">
+            <button
+              type="button"
+              onClick={handlePrevMonth}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Previous month"
+            >
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </button>
+            <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+              {monthName}
+            </h3>
+            <button
+              type="button"
+              onClick={handleNextMonth}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+              aria-label="Next month"
+            >
+              <svg className="w-5 h-5 text-gray-600 dark:text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Week Days */}
+          <div className="grid grid-cols-7 gap-1 mb-2">
+            {weekDays.map((day) => (
+              <div
+                key={day}
+                className="text-center text-xs font-semibold text-gray-500 dark:text-gray-400 py-2"
+              >
+                {day}
+              </div>
+            ))}
+          </div>
+
+          {/* Calendar Days */}
+          <div className="grid grid-cols-7 gap-1">
+            {days.map((date, index) => {
+              if (!date) {
+                return <div key={`empty-${index}`} className="aspect-square" />
+              }
+
+              const disabled = isDateDisabled(date)
+              const selected = isDateSelected(date)
+              const today = isToday(date)
+
+              return (
+                <button
+                  key={formatDate(date)}
+                  type="button"
+                  onClick={() => handleDateSelect(date)}
+                  disabled={disabled}
+                  className={`aspect-square rounded-lg text-sm font-medium transition-colors ${
+                    disabled
+                      ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                      : selected
+                      ? 'bg-primary-600 dark:bg-primary-500 text-white'
+                      : today
+                      ? 'bg-primary-100 dark:bg-primary-900/30 text-primary-700 dark:text-primary-300 font-semibold'
+                      : 'text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800'
+                  }`}
+                >
+                  {date.getDate()}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  )
+}
+
 export default function BookConsultationPage() {
   const router = useRouter()
   const { isAuthenticated, user } = useAuth()
@@ -208,6 +430,14 @@ export default function BookConsultationPage() {
     setFormData(prev => ({
       ...prev,
       [name]: value
+    }))
+    setError('')
+  }
+
+  const handleDateChange = (value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      date: value
     }))
     setError('')
   }
@@ -327,15 +557,13 @@ export default function BookConsultationPage() {
                   <label htmlFor="date" className="block text-sm font-semibold text-gray-900 dark:text-white">
                     Select Date <span className="text-red-500">*</span>
                   </label>
-                  <input
-                    type="date"
+                  <CustomDatePicker
                     id="date"
                     name="date"
-                    required
-                    min={today}
                     value={formData.date}
-                    onChange={handleChange}
-                    className="w-full px-4 py-3.5 rounded-xl border-2 border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-900 dark:text-white focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-all outline-none text-base"
+                    minDate={today}
+                    onChange={handleDateChange}
+                    required
                   />
                   <p className="text-xs text-gray-500 dark:text-gray-400">
                     Available from today onwards
